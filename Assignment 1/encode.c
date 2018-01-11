@@ -1,4 +1,4 @@
-/* 
+/*
  * File:	encode.c
  * Author:	Jackson Petty <jackson.petty@yale.edu>
  * Date:	9 January 2018
@@ -22,7 +22,7 @@ int next_char(void)
 
 	int c = getchar();
 
-	if (c != EOF) { ungetc(c,stdin); }
+	if (c != EOF) { ungetc(c, stdin); }
 
 	return c;
 }
@@ -44,22 +44,18 @@ void parse_input(void)
 	 */
 
 	unsigned int count = 0;
-	int first_char = 0;
-	int c;
-	int is_lowercase;
+	char first_char = 0;
+	char c;
 
 	while (next_char() != EOF) {
 		c = getchar();
 
 		if (isalpha(c)) {
-			if (count) {
-				if (count == 1) {
-					is_lowercase ? putchar(tolower(c)) : putchar(toupper(c));
-				} else {
-					putchar(c);
-				}
+			if (count == 1) {
+				islower(first_char) ? putchar(tolower(c)) : putchar(toupper(c));
+			} else if (count) {
+				putchar(c);
 			} else {
-				is_lowercase = islower(c);
 				first_char = c;
 			}
 		} else {
@@ -82,3 +78,4 @@ int main(void)
 
 	return 0;
 }
+
