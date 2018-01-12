@@ -53,10 +53,8 @@ void parse_input(void)
 		if (isalpha(c)) {
 			if (count == 1) {
 				islower(first_char) ? putchar(tolower(c)) : putchar(toupper(c));
-			} else if (count) {
-				putchar(c);
 			} else {
-				first_char = c;
+				count ?	putchar(c) : (first_char = c);
 			}
 		} else {
 			if (first_char) {
