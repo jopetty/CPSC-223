@@ -12,44 +12,27 @@
 #define SHORT_ENDING	"an"
 #define LONG_ENDING	"o"
 
-int next_char(void)
-{
-	/*
-	 * Function: next_char()
-	 * -----------------------------------------
-	 * 	Returns the next character in the stream
-	 */
-
-	int c = getchar();
-
-	if (c != EOF) { ungetc(c, stdin); }
-
-	return c;
-}
-
 void parse_input(void)
 {
 	/*
 	 * Function parse_input()
 	 * ------------------------------------------
-	 *  	Prints out all non-letter characters as is,
-	 *  	and prints out processed versions of words.
+	 *  Prints out all non-letter characters as is,
+	 *  and prints out processed versions of words.
 	 *
-	 *  	Rules:
-	 *  	 1. Move the first letter to the end.
-	 *  	 2. Add "an" to ends of words of 3 letters
-	 *  	    or less, or "o" to words of > 3 letters.
-	 *  	 3. Make the resulting word match the case
-	 *  	    of the initial word.
+	 *  Rules:
+	 *   1. Move the first letter to the end.
+	 *   2. Add "an" to ends of words of 3 letters
+	 *      or less, or "o" to words of > 3 letters.
+	 *   3. Make the resulting word match the case
+	 *      of the initial word.
 	 */
 
 	unsigned int count = 0;
 	char first_char = 0;
 	char c;
 
-	while (next_char() != EOF) {
-		c = getchar();
-
+	while ((c = getchar()) != EOF) {
 		if (isalpha(c)) {
 			if (count == 1) {
 				islower(first_char) ? putchar(tolower(c)) : putchar(toupper(c));
