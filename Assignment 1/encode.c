@@ -9,8 +9,8 @@
 #include <stdio.h>
 #include <ctype.h>
 
-#define SHORT_ENDING	"an"
-#define LONG_ENDING	"o"
+#define SHORT_ENDING	("an")
+#define LONG_ENDING	("o")
 
 void parse_input(void)
 {
