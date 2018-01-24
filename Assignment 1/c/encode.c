@@ -12,21 +12,6 @@
 #define SHORT_ENDING	("an")
 #define LONG_ENDING	("o")
 
-int next_char(void)
-{
-	/*
-	 *  Function: next_char()
-	 *  -----------------------------------------
-	 *  Returns the next character in the stream
-	 */
-
-	int c = getchar();
-
-	if (c != EOF) { ungetc(c, stdin); }
-
-	return c;
-}
-
 void parse_input(void)
 {
 	/*
