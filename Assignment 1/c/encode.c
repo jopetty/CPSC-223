@@ -70,8 +70,13 @@ void parse_input(void)
 	}
 }
 
-int main(void)
+int main(int argc, char** argv)
 {
+	if (argc != 1) {
+		fprintf(stderr, "Usage: %s\n", argv[0]);
+		return 1;
+	}
+
 	parse_input();
 
 	return 0;
