@@ -1,9 +1,10 @@
-#![feature(ascii_ctype)]
-
 use std::io::{self, Read};
 
+const LONG_ENDING: &'static str = "o";
+const SHORT_ENDING: &'static str = "an";
+
+/// Returns a buffer from standard in
 fn get_buffer() -> io::Result<String> {
-	/// 
 
 	let mut buffer = String::new();
 	let stdin = io::stdin();
@@ -13,19 +14,49 @@ fn get_buffer() -> io::Result<String> {
 	Ok(buffer)
 }
 
+/// Conditionally prints out characters in buffer
 fn print_buffer(buffer: &str) {
 	
-
-	let mut chars = buffer.chars();
-
 	let mut count: u32 = 0;
-	for c in chars {
-		if c.is_ascii_alphabetic() {
-			print!("Yep");
-			count += 1;
+	let mut first_char: Option<char> = None;
+
+	for c in buffer.chars() {
+		if c.is_alphabetic() {
+			match count {
+				0 => first_char = Some(c),
+				1 => {
+					match first_char.unwrap().is_lowercase() {
+						true => print!("{}", c.to_lowercase().collect::<String>()),
+						false => print!("{}", c.to_uppercase().collect::<String>()),
+					}
+				},
+				_ => print!("{}", c)
+			}
 		} else {
-			print!("Nope: {}", c);
-			count = 0;
+			match first_char {
+				Some(f) => {
+					match count {
+						1 => {
+							print!("{}", f);
+							print!("{}", SHORT_ENDING);
+						},
+						_ => {
+							print!("{}", first_char.unwrap().to_lowercase().collect::<String>());
+							match count {
+								2 | 3 => print!("{}", SHORT_ENDING),
+								_=> 	 print!("{}", LONG_ENDING),
+							}
+						},
+					}
+					first_char = None;
+				},
+				None => {},
+			}
+			print!("{}", c);
+		}
+		match first_char {
+			Some(_) => count += 1,
+			None => count = 0,
 		}
 	}
 }
