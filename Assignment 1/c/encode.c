@@ -1,9 +1,9 @@
 /*
- * File:	encode.c
- * Author:	Jackson Petty <jackson.petty@yale.edu>
- * Date:	9 January 2018
+ *  File:	encode.c
+ *  Author:	Jackson Petty <jackson.petty@yale.edu>
+ *  Date:	9 January 2018
  *
- * Description:	This file implements all code required for Assignment 1 of CPSC 223b.
+ *  Description:	This file implements all code required for Assignment 1 of CPSC 223b.
  */
 
 #include <stdio.h>
@@ -41,14 +41,13 @@ void parse_input(void)
 	 *      or less, or "o" to words of > 3 letters.
 	 *   3. Make the resulting word match the case
 	 *      of the initial word.
-	 */
+	 */	
 
 	unsigned int count = 0;
 	char first_char = 0;
-	char c;
+	int c;
 
-	while (next_char() != EOF) {
-		c = getchar();
+	while ((c = getchar()) != EOF) {
 
 		if (isalpha(c)) {
 			if (count == 1) {
