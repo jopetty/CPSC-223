@@ -44,7 +44,7 @@ fn print_buffer(buffer: &str) {
 							print!("{}", first_char.unwrap().to_lowercase().collect::<String>());
 							match count {
 								2 | 3 => print!("{}", SHORT_ENDING),
-								_=> 	 print!("{}", LONG_ENDING),
+								_ => 	 print!("{}", LONG_ENDING),
 							}
 						},
 					}
