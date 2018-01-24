@@ -54,5 +54,6 @@ dkms.conf
 ## Rust
 # will have compiled files and executables
 **/target/
+Assignment*/rust/*/target/
 
 **/Cargo.lock
