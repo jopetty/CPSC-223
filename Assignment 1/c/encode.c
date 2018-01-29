@@ -50,7 +50,16 @@ void parse_input(void)
 			putchar(c);
 		}
 
-		first_char ? count++ : (count = 0);
+		if (first_char) {
+			if (count < 4) { count++; } // In case count > MAX_INT
+		} else {
+			count = 0;
+		}
+	}
+
+	if (count) { // If we never ecounter non-alphabetic characters, print out ending here
+		(count == 1) ? putchar(first_char) 	 : putchar(tolower(first_char));
+		(count > 3)  ? printf("%s", LONG_ENDING) : printf("%s", SHORT_ENDING);
 	}
 }
 
