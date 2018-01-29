@@ -28,7 +28,7 @@ void parse_input(void)
 	 *      of the initial word.
 	 */	
 
-	unsigned int count = 0;
+	unsigned short count = 0;
 	char first_char = 0;
 	int c;
 
@@ -51,7 +51,11 @@ void parse_input(void)
 		}
 
 		if (first_char) {
-			if (count < 4) { count++; } // In case count > MAX_INT
+			// We only need to test if count is greater than 3,
+			// so we stop incrementing at count == 4 to save
+			// memory and prevent an integer overflow error
+			// if we ever get passed an insanely long file.
+			if (count < 4) { count++; }
 		} else {
 			count = 0;
 		}
