@@ -1,7 +1,7 @@
 /*
- *  File:	encode.c
- *  Author:	Jackson Petty <jackson.petty@yale.edu>
- *  Date:	9 January 2018
+ *  File:		encode.c
+ *  Author:		Jackson Petty <jackson.petty@yale.edu>
+ *  Date:		9 January 2018
  *
  *  Description:	This file implements all code required for Assignment 1 of CPSC 223b.
  */
