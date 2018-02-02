@@ -8,6 +8,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 static unsigned int n;
 static int a;
@@ -16,10 +17,21 @@ static int b;
 void parse_input()
 {
 	unsigned int count = 0;
-	int c = 0;
+	int c;
+	char buffer[n];
 
-	while ((c = getchar()) != EOF && count++ < n) {
-		putchar(c);
+	while ((c = getchar()) != EOF) {
+		
+		buffer[count++] = c;
+		// printf("Putting '%c' at position %u\n", c, count-1);
+
+		if (count == n || c == EOF) {
+			for (size_t i = 0; i < count; i++) {
+				putchar(buffer[(a*i + b) %n]);
+				buffer[(a*i + b) % n] = '\0';
+			}
+			count = 0;
+		}
 	}
 }
 
