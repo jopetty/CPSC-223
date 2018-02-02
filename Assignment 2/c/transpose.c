@@ -11,6 +11,10 @@
 #include <unistd.h>
 #include <string.h>
 
+#define ERR_ARG_NUM	1
+#define ERR_MEM_ALC	2
+#define ERR_NEG_VAL	3
+
 static unsigned int n;
 static int a;
 static int b;
@@ -28,7 +32,7 @@ int parse_input()
 
 	if (buffer ==  NULL) {
 		fprintf(stderr, "Unable to allocate memory for %d items.\n", n);
-		return 2;
+		return ERR_MEM_ALC;
 	}
 
 	memset(buffer, '\0', n*sizeof(int));
@@ -63,11 +67,13 @@ int main(int argc, char** argv)
 
 	if (argc != 4) { 
 		fprintf(stderr, "Wrong number of arguments supplied.\n");
-		return 1; 
+		return ERR_ARG_NUM; 
 	} else {
 		n = atoi(argv[1]);
 		a = atoi(argv[2]);
 		b = atoi(argv[3]);
+
+		
 	
 		return parse_input();
 	}
