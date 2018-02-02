@@ -69,11 +69,9 @@ int main(int argc, char** argv)
 		fprintf(stderr, "Wrong number of arguments supplied.\n");
 		return ERR_ARG_NUM; 
 	} else {
-		n = atoi(argv[1]);
+		if (atoi(argv[1]) < 1) { return ERR_NEG_VAL; } else { n = atoi(argv[1]); }
 		a = atoi(argv[2]);
 		b = atoi(argv[3]);
-
-		
 	
 		return parse_input();
 	}
