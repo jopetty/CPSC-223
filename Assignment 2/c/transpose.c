@@ -23,7 +23,6 @@ void parse_input()
 	while ((c = getchar()) != EOF) {
 		
 		buffer[count++] = c;
-		// printf("Putting '%c' at position %u\n", c, count-1);
 
 		if (count == n || c == EOF) {
 			for (size_t i = 0; i < count; i++) {
@@ -31,6 +30,12 @@ void parse_input()
 				buffer[(a*i + b) % n] = '\0';
 			}
 			count = 0;
+		}
+	}
+
+	if (count) {
+		for (size_t i = 0; i < n; i++) {
+			putchar(buffer[(a*i + b) %n]);
 		}
 	}
 }
