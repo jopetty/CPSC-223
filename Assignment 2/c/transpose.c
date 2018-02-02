@@ -69,7 +69,7 @@ int main(int argc, char** argv)
 		a = atoi(argv[2]);
 		b = atoi(argv[3]);
 	
-		if (parse_input()) { return 2; }
+		return parse_input();
 	}
 
 	return 0;
