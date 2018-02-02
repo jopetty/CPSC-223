@@ -19,7 +19,7 @@ static unsigned int n;
 static int a;
 static int b;
 
-int modulo(int x, int y)
+extern inline int modulo(int x, int y)
 {
 	return ((x % y) + y) % y;
 }
