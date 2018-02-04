@@ -101,6 +101,4 @@ int main(int argc, char** argv)
 	
 		return parse_input();
 	}
-
-	return 0;
 }
