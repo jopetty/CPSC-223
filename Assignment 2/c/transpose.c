@@ -41,12 +41,12 @@ extern inline int modulo(long long x, unsigned int y)
 int parse_input(void)
 {
 	/*
-	 *  Function parse_input()
+	 *  Function parse_input(void) -> status_code
 	 *  -----------------------------
 	 *  @param: void
 	 *  	No arguments should be passed
 	 *
-	 *  @return: status code (int)
+	 *  @return: status_code (int)
 	 *  	Return error code if failed, or 
 	 *  	zero if successful.
 	 *
@@ -78,7 +78,7 @@ int parse_input(void)
 		}
 	}
 
-	if (count) {
+	if (count) { // length of stdin is not a multiple of n
 		for (size_t i = 0; i < n; i++) {
 			putchar(buffer[modulo((((long long)a)*i+b),n)]);
 		}
