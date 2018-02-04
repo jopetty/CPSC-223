@@ -55,8 +55,9 @@ int parse_input(void)
 	 *  	2 => ERR_MEM_ALC
 	 */
 
-	unsigned int count = 0;
 	int c;
+	size_t output;
+	unsigned int count = 0;
 	char* buffer = malloc(n * sizeof(int));
 
 	if (buffer ==  NULL) {
@@ -72,8 +73,9 @@ int parse_input(void)
 
 		if (count == n) {
 			for (size_t i = 0; i < count; i++) {
-				putchar(buffer[modulo((((long long)a)*i+b),n)]);
-				buffer[modulo((a*i+b),n)] = '\0';
+				output = modulo((((long long)a)*i+b),n);
+				putchar(buffer[output]);
+				buffer[output] = '\0';
 			}
 			count = 0;
 		}
