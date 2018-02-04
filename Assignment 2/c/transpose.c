@@ -19,7 +19,7 @@ static unsigned int n;
 static int a;
 static int b;
 
-extern inline int modulo(int x, int y)
+extern inline int modulo(long long x, int y)
 {
 	return ((x % y) + y) % y;
 }
@@ -43,7 +43,7 @@ int parse_input()
 
 		if (count == n) {
 			for (size_t i = 0; i < count; i++) {
-				putchar(buffer[modulo((a*i+b),n)]);
+				putchar(buffer[modulo((((long long)a)*i+b),n)]);
 				buffer[modulo((a*i+b),n)] = '\0';
 			}
 			count = 0;
@@ -52,7 +52,7 @@ int parse_input()
 
 	if (count) {
 		for (size_t i = 0; i < n; i++) {
-			putchar(buffer[modulo((a*i+b),n)]);
+			putchar(buffer[modulo((((long long)a)*i+b),n)]);
 		}
 	}
 
@@ -64,7 +64,6 @@ int parse_input()
 
 int main(int argc, char** argv)
 {
-
 	if (argc != 4) { 
 		fprintf(stderr, "Wrong number of arguments supplied.\n");
 		return ERR_ARG_NUM; 
