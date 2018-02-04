@@ -1,9 +1,9 @@
 /*
- * File:	transpose.c
- * Author:	Jackson Petty <jackson.petty@yale.edu>
- * Date:	1 February 2018
+ *  File:		transpose.c
+ *  Author:		Jackson Petty <jackson.petty@yale.edu>
+ *  Date:		1 February 2018
  *
- * Description:	This file contains all code for Assignment 2
+ *  Description:	This file contains all code for Assignment 2
  */
 
 #include <stdio.h>
@@ -11,9 +11,9 @@
 #include <unistd.h>
 #include <string.h>
 
-#define ERR_ARG_NUM	1
-#define ERR_MEM_ALC	2
-#define ERR_NEG_VAL	3
+#define ERR_ARG_NUM	1 // Wrong number of arguments
+#define ERR_MEM_ALC	2 // Unable to allocate memory for buffer
+#define ERR_NEG_VAL	3 // n < 1
 
 static unsigned int n;
 static int a;
@@ -21,11 +21,39 @@ static int b;
 
 extern inline int modulo(long long x, int y)
 {
+	/*
+	 *  Function modulo(x, y) -> z
+	 *  -----------------------------
+	 *  @param: x (long long)
+	 *  	x cannot always fit into an integer, so we
+	 *  	must cast it up to a long long to prevent
+	 *  	overflow
+	 *  @param: y (int)
+	 *  	y will always be able to fit into an int
+	 *
+	 *  @return: z (long long)
+	 *  	z = x mod y
+	 */
+
 	return ((x % y) + y) % y;
 }
 
 int parse_input()
 {
+	/*
+	 *  Function parse_input()
+	 *  -------------------------
+	 *  @param: void
+	 *  	No arguments should be passed
+	 *
+	 *  @return: status code (int)
+	 *  	Return error code if failed, or 
+	 *  	zero if successful.
+	 *
+	 *  	0 => Success
+	 *  	2 => ERR_MEM_ALC
+	 */
+
 	unsigned int count = 0;
 	int c;
 	char* buffer = malloc(n * sizeof(int));
