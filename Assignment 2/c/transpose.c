@@ -27,8 +27,10 @@ extern inline int modulo(long long x, unsigned int y)
 	 *  	x cannot always fit into an integer, so we
 	 *  	must cast it up to a long long to prevent
 	 *  	overflow
-	 *  @param: y (int)
-	 *  	y will always be able to fit into an int
+	 *  @param: y (unsigned int)
+	 *  	y will always be able to fit into an
+	 *  	integer. Since y <- n always, we can assume
+	 *  	that it is unsigned.
 	 *
 	 *  @return: z (long long)
 	 *  	z = x mod y
