@@ -19,7 +19,7 @@ static unsigned int n;
 static int a;
 static int b;
 
-extern inline int modulo(long long x, int y)
+extern inline int modulo(long long x, unsigned int y)
 {
 	/*
 	 *  Function modulo(x, y) -> z
@@ -38,11 +38,11 @@ extern inline int modulo(long long x, int y)
 	return ((x % y) + y) % y;
 }
 
-int parse_input()
+int parse_input(void)
 {
 	/*
 	 *  Function parse_input()
-	 *  -------------------------
+	 *  -----------------------------
 	 *  @param: void
 	 *  	No arguments should be passed
 	 *
