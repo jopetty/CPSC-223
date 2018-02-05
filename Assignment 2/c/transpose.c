@@ -65,7 +65,7 @@ int parse_input(void)
 		return ERR_MEM_ALC;
 	}
 
-	memset(buffer, '\0', n*sizeof(int));
+	memset(buffer, '\0', n * sizeof(int));
 
 	while ((c = getchar()) != EOF) {
 		
