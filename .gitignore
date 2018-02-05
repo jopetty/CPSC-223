@@ -56,3 +56,6 @@ dkms.conf
 **/target/
 
 **/Cargo.lock
+
+## VSCode
+**/.vscode
