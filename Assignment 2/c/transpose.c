@@ -96,7 +96,7 @@ int parse_input(void)
 int main(int argc, char** argv)
 {
 	if (argc != 4) { 
-		fprintf(stderr, "Wrong number of arguments supplied.\n");
+		fprintf(stderr, "Usage: %s n a b\n", argv[0]);
 		return ERR_ARG_NUM; 
 	} else {
 		if (atoi(argv[1]) < 1) { return ERR_NEG_VAL; } else { n = atoi(argv[1]); }
