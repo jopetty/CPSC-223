@@ -10,9 +10,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define ERR_ARG_NUM	1 // Wrong number of arguments
-#define ERR_MEM_ALC	2 // Unable to allocate memory for buffer
-#define ERR_NEG_VAL	3 // n < 1
+#define ERR_ARG_NUM	(1) // Wrong number of arguments
+#define ERR_MEM_ALC	(2) // Unable to allocate memory for buffer
+#define ERR_NEG_VAL	(3) // n < 1
 
 static unsigned int n;
 static int a;
