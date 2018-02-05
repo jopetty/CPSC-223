@@ -18,7 +18,7 @@ static unsigned int n;
 static int a;
 static int b;
 
-extern inline int modulo(long long x, unsigned int y)
+static inline int modulo(long long x, unsigned int y)
 {
 	/*
 	 *  Function modulo(x, y) -> z
