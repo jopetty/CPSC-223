@@ -73,7 +73,7 @@ int parse_input(void)
 
 		if (count == n) {
 			for (size_t i = 0; i < count; i++) {
-				output = modulo((((long long)a)*i+b), n);
+				output = modulo(((long long)a * i + b), n);
 				putchar(buffer[output]);
 				buffer[output] = '\0';
 			}
@@ -83,7 +83,7 @@ int parse_input(void)
 
 	if (count) { // length of stdin is not a multiple of n
 		for (size_t i = 0; i < n; i++) {
-			putchar(buffer[modulo((((long long)a)*i+b), n)]);
+			putchar(buffer[modulo(((long long)a * i + b), n)]);
 		}
 	}
 
