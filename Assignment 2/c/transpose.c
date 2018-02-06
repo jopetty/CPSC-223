@@ -60,7 +60,7 @@ int parse_input(void)
 	unsigned int count = 0;
 	char* buffer = malloc(n * sizeof(int));
 
-	if (buffer ==  NULL) {
+	if (!buffer) {
 		fprintf(stderr, "Unable to allocate memory for %d items.\n", n);
 		return ERR_MEM_ALC;
 	}
