@@ -55,15 +55,16 @@ int parse_input(void)
 	 *  	2 => ERR_MEM_ALC
 	 */
 
-	int c;
-	size_t output;
-	unsigned int count = 0;
 	char* buffer = malloc(n * sizeof(int));
 
 	if (!buffer) {
 		fprintf(stderr, "Unable to allocate memory for %d items.\n", n);
 		return ERR_MEM_ALC;
 	}
+
+	int c;
+	size_t output;
+	unsigned int count = 0;
 
 	memset(buffer, '\0', n * sizeof(int));
 
