@@ -100,7 +100,12 @@ int main(int argc, char** argv)
 		fprintf(stderr, "Usage: %s n a b\n", argv[0]);
 		return ERR_ARG_NUM; 
 	} else {
-		if (atoi(argv[1]) < 1) { return ERR_NEG_VAL; } else { n = atoi(argv[1]); }
+		if (atoi(argv[1]) < 1) { 
+			fprintf(stderr, "n must be greater than or equal to 1.\n");
+			return ERR_NEG_VAL; 
+		} else { 
+			n = atoi(argv[1]); 
+		}
 		a = atoi(argv[2]);
 		b = atoi(argv[3]);
 	
