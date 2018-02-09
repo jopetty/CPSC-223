@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <limits.h>
 
 #include "num.h"
 
@@ -13,6 +14,7 @@ int main(int argc, char** argv)
 	numPrint(test, stdout);
 
 	printf("\n\n%d\n", numGetDigit(test, 3));
+	printf("\n\n%d\n", numGetDigit(test, (long long)INT_MAX + 3));
 
 	numDestroy(test);
 

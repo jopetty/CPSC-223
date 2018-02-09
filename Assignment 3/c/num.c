@@ -43,7 +43,7 @@ void numDestroy(struct num *n) {
 }
 
 int numGetDigit(const Num *n, int i) {
-	assert(i < NUM_LENGTH && i >= 0);
+	assert(i >= 0);
 
 	return n->a[NUM_LENGTH - i];
 }
