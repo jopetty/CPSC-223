@@ -153,7 +153,7 @@ Num *numMultiply(const Num *x, const Num *y)
 {
 	Num *product = numCreate("");
 
-	if (x->length == 0 || y->length == 0) {
+	if (!(x->length && y->length)) {
 		return product;
 	}
 
@@ -172,12 +172,13 @@ Num *numMultiply(const Num *x, const Num *y)
 
 void numPrint(const Num *n, FILE *f)
 {
-	if (n->length == 0) {
-		fprintf(f, "0");
-	} else {
+	if (n->length) {
 		for (size_t i = 0; i < (size_t)n->length; i++) {
 			fprintf(f, "%d", numGetDigit(n, n->length - (i+1)));
 		}
+		
+	} else {
+		fprintf(f, "0");
 	}
 }
 
