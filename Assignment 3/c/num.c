@@ -32,20 +32,28 @@ Num * numCreate(const char * s)
 		if (s[i] != '0' && !leading_digit_flag) { leading_digit_flag = i; }
 	}
 
+	int start_pos = 0;
+	for (size_t j = 0; j < length; j++) {
+		if (s[j] != '0' ) { start_pos = j; break; }
+	}
+
 	// If we encountered a non-zero digit, we can start from that point
 	// and disregard all the leading zeros. If not, we start from one 
 	// place before the end, and always get the 'same' zero Num.
-	leading_digit_flag = !leading_digit_flag ? (length - 1) : leading_digit_flag - 1;
+
+	// leading_digit_flag = !leading_digit_flag ? length : leading_digit_flag - 1;
+
+	leading_digit_flag = 0;
 
 	// Create Num
 	Num * n = malloc(sizeof(struct num) + NUM_LENGTH * sizeof(int));
 	assert(n);
 
-	for (size_t i = leading_digit_flag; i < length; i++) {
+	for (size_t i = start_pos; i < length; i++) {
 		n->digits[length - (i + 1)] = (s[i] - ASCII_OFFST);
 	}
 
-	n->length = length - leading_digit_flag;
+	n->length = length - start_pos;
 
 	return n;
 }
@@ -173,4 +181,11 @@ void numPrint(const Num * n, FILE * f)
 			fprintf(f, "%d", numGetDigit(n, n->length - (i+1)));
 		}
 	}
+}
+
+void showNumber(const Num * n) 
+{
+	printf("{ %d : ", n->length);
+	numPrint(n, stdout);
+	printf(" }\n");
 }
