@@ -34,7 +34,7 @@ struct num {
 	 * 	digit[length - 1] is the most significant.
 	 */
 
-	int length; // Cannot exceed INT_MAX by prototype of numGetDigit()
+	int length;
 	int digits[NUM_MAX_LEN];
 };
 
@@ -170,7 +170,7 @@ static Num *scalarMultiply(const Num *x, int lambda, int shift)
 
 	for (size_t j = 0; j < (size_t)shift; j++) {
 		for (size_t k = 0; k < (size_t)(sum->length); k++) {
-			sum->digits[sum->length - k] = sum->digits[sum->length - k - 1];
+			sum->digits[sum->length - k] = sum->digits[sum->length - (k + 1)];
 		}
 		sum->digits[0] = 0;
 		sum->length++;
@@ -224,7 +224,7 @@ void numPrint(const Num *n, FILE *f)
 {
 	if (n->length) {
 		for (size_t i = 0; i < (size_t)n->length; i++) {
-			fprintf(f, "%d", numGetDigit(n, n->length - (i+1)));
+			fprintf(f, "%d", numGetDigit(n, n->length - (i + 1)));
 		}
 		
 	} else {
