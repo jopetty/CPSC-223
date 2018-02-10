@@ -23,10 +23,10 @@ int main(int argc, char ** argv)
 
 	Num * digit_test = numCreate("12345");
 	numPrint(digit_test, stdout);
-    assert(numGetDigit(digit_test, 0) == 5);
-    assert(numGetDigit(digit_test, 3) == 2);
-    assert(numGetDigit(digit_test, 17) == 0);
-    assert(numGetDigit(digit_test, -12) == 0);
+	assert(numGetDigit(digit_test, 0) == 5);
+	assert(numGetDigit(digit_test, 3) == 2);
+	assert(numGetDigit(digit_test, 17) == 0);
+	assert(numGetDigit(digit_test, -12) == 0);
 	numDestroy(digit_test);
 
 	return 0;
