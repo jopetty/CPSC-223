@@ -66,7 +66,7 @@ Num * numAdd(const Num * x, const Num * y)
 	max_length = (x->length > y->length) ? x->length : y->length;
 
 	while (i < max_length || carry) {
-		tmp = x->digits[i] + y->digits[i] + carry;
+		tmp = numGetDigit(x, i) + numGetDigit(y, i) + carry;
 
 		if (tmp > 10) {
 			carry = tmp / 10;
@@ -76,9 +76,12 @@ Num * numAdd(const Num * x, const Num * y)
 		}
 
 		sum->digits[i++] = tmp;
+
+		if (i == max_length && carry) {
+			max_length++;
+		}
 	}
 
-	// TODO: Make sure we increment if we end up with a non-zero carry
 	sum->length = max_length;
 
 	return sum;

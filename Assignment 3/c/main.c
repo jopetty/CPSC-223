@@ -45,5 +45,15 @@ int main(int argc, char ** argv)
 
 	printf("\n");
 
+	first_addened = numCreate("99");
+	second_addened = numCreate("13");
+	sum = numAdd(first_addened, second_addened);
+	numPrint(sum, stdout);
+	numDestroy(first_addened);
+	numDestroy(second_addened);
+	numDestroy(sum);
+
+	printf("\n");
+
 	return 0;
 }
