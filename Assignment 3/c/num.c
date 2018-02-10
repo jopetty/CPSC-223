@@ -15,10 +15,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define ERR_BAD_NUM	(NULL)
-#define ERR_MEM_ALC	(1)
-#define NUM_MAX_LEN	(INT_MAX)
-#define ASCII_OFFST	(48)
+#define ERR_MEM_ALC	(1)	// 
+#define NUM_MAX_LEN	(INT_MAX)	// Maximum number of digits
+#define ASCII_OFFST	(48)	// Conversion from 'digit' to digit
 
 struct num {
 	int length; // Cannot exceed INT_MAX by prototype of numGetDigit()
@@ -45,25 +44,23 @@ Num *numCreate(const char *s)
 	 * 		4. Empty string "" becomes (0, 0)
 	 */
 
-	// If we encountered a non-zero digit, we can start from that point
-	// and disregard all the leading zeros. If not, we treat input as 
-	// an empty string to get a Num of length 0
-	// int start_pos = -1;
 	size_t length = strlen(s);
-	size_t start_pos = length;
+	size_t start_pos = length; // First non-zero digit in string
 
 	for (size_t i = 0; i < length; i++) {
-		if (!isdigit(s[i])) { return ERR_BAD_NUM; }
+		if (!isdigit(s[i])) { return NULL; }
 		if (s[i] != '0' && (start_pos == length)) { start_pos = i; }
 	}
 
-	// if (start_pos < 0) { start_pos = length; }
-
 	Num *n = malloc(sizeof(*n));
-	assert(n);
+	if (!n) {
+		fprintf(stderr, "Unable to allocate memory for Num('%s').\n", s);
+		assert(n);
+		return NULL;
+	}
 
 	for (size_t j = start_pos; j < length; j++) {
-		n->digits[length - (j + 1)] = (s[j] - ASCII_OFFST);
+		n->digits[length - (j + 1)] = (s[j] - ASCII_OFFST); // '1' -> 1, etc
 	}
 
 	n->length = length - start_pos;
