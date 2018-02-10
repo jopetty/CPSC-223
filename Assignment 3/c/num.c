@@ -24,26 +24,23 @@ struct num {
 Num * numCreate(const char * s)
 {
 	// Saitize input
-	int leading_digit_flag = 0;
 	size_t length = strlen(s);
 
 	for (size_t i = 0; i < length; i++) {
 		if (!isdigit(s[i])) { return ERR_BAD_NUM; }
-		if (s[i] != '0' && !leading_digit_flag) { leading_digit_flag = i; }
-	}
-
-	int start_pos = 0;
-	for (size_t j = 0; j < length; j++) {
-		if (s[j] != '0' ) { start_pos = j; break; }
 	}
 
 	// If we encountered a non-zero digit, we can start from that point
 	// and disregard all the leading zeros. If not, we start from one 
 	// place before the end, and always get the 'same' zero Num.
+	int start_pos = -1;
+	for (size_t j = 0; j < length; j++) {
+		if (s[j] != '0' ) { start_pos = j; break; }
+	}
 
-	// leading_digit_flag = !leading_digit_flag ? length : leading_digit_flag - 1;
-
-	leading_digit_flag = 0;
+	if (start_pos < 0) {
+		start_pos = length;
+	}
 
 	// Create Num
 	Num * n = malloc(sizeof(struct num) + NUM_LENGTH * sizeof(int));
