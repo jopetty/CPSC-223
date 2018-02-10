@@ -16,10 +16,13 @@ int main(int argc, char ** argv)
 	numDestroy(test);
 
 	Num * blank_test = numCreate("");
-	numPrint(blank_test, stdout);
+	assert(numGetDigit(blank_test, 0) == 0);
 	numDestroy(blank_test);
 
+	printf("\n");
+
 	Num * digit_test = numCreate("12345");
+	numPrint(digit_test, stdout);
     assert(numGetDigit(digit_test, 0) == 5);
     assert(numGetDigit(digit_test, 3) == 2);
     assert(numGetDigit(digit_test, 17) == 0);

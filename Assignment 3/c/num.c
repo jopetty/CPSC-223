@@ -31,7 +31,7 @@ struct num * numCreate(const char * s)
 	size_t length = strlen(s);
 
 	for (size_t i = 0; i < length; i++) {
-		n->digits[NUM_LENGTH - i] = (s[i] - ASCII_OFFST);
+		n->digits[length - (i + 1)] = (s[i] - ASCII_OFFST);
 	}
 
 	n->length = length;
@@ -47,8 +47,8 @@ void numDestroy(struct num * n)
 
 int numGetDigit(const Num * n, int i)
 {
-	if (i < n->length && i > 0) {
-		return n->digits[NUM_LENGTH - i];
+	if (i < n->length && i >= 0) {
+		return n->digits[i];
 	} else {
 		return 0;
 	}
@@ -93,7 +93,7 @@ void numPrint(const Num * n, FILE * f)
 	}
 	else {
 		for (size_t i = 0; i < (size_t)n->length; i++) {
-			fprintf(f, "%d", n->digits[NUM_LENGTH - i]);
+			fprintf(f, "%d", numGetDigit(n, n->length - (i+1)));
 		}
 	}
 }
