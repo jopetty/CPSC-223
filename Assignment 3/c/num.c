@@ -1,23 +1,27 @@
+/*
+ *  File:		num.c
+ *  Author:		Jackson Petty <jackson.petty@yale.edu>
+ *  Date:		1 February 2018
+ *
+ *  Description:	This file contains the implementation for num.h
+ */
+
+#include "num.h"
+
+#include <assert.h>
+#include <ctype.h>
+#include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <limits.h>
-#include <assert.h>
-#include <ctype.h>
-
-#include "num.h"
 
 #define ERR_BAD_NUM (NULL)
 #define ERR_MEM_ALC	(1)
 #define NUM_MAX_LEN	(INT_MAX)
 #define ASCII_OFFST	(48)
 
-// Note that since numGetDigit(n, digit) takes `digit` as an int, we know that
-// there can never be more than INT_MAX digits
-// We sacrifice storage efficiency for a constant size,
-// Which makes implementing operations much much easier
 struct num {
-	int length;
+	int length; // Cannot exceed INT_MAX by prototype of numGetDigit()
 	int digits[NUM_MAX_LEN];
 };
 
@@ -158,8 +162,8 @@ Num * numMultiply(const Num *x, const Num *y)
 			Num * s_mult = scalarMultiply(x, numGetDigit(y, i), i);
 			Num * sum = numAdd(product, s_mult);
 			numDestroy(product);
-			product = sum;
 			numDestroy(s_mult);
+			product = sum;
 		}
 	}
 
