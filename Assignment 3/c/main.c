@@ -16,12 +16,25 @@ int main(int argc, char ** argv)
 	numPrint(test, stdout);
 	numDestroy(test);
 
+	printf("\n");
+
 	// Checking if null Num is created correctly
 	Num * blank_test = numCreate("");
 	assert(numGetDigit(blank_test, 0) == 0);
+	numPrint(blank_test, stdout);
 	numDestroy(blank_test);
 
 	printf("\n");
+
+	// Leading Zeros
+	Num * zero_test = numCreate("000123");
+	numPrint(zero_test, stdout);
+	numDestroy(zero_test);
+
+	printf("\n");
+
+	Num * bad_val = numCreate("tstes112321fdas");
+	numDestroy(bad_val);
 
 	// Checking if digits are stored correctly
 	Num * digit_test = numCreate("12345");
@@ -97,6 +110,17 @@ int main(int argc, char ** argv)
 
 	factor_a = numCreate("29");
 	factor_b = numCreate("112");
+
+	product = numMultiply(factor_a, factor_b);
+	numPrint(product, stdout);
+	printf("\n");
+
+	numDestroy(factor_a);
+	numDestroy(factor_b);
+	numDestroy(product);
+
+	factor_a = numCreate("2570906032674836362493098841827039250513722520868666904498196035555315023364249");
+	factor_b = numCreate("23501800604186922700076639428968353822086810802999803164890312934792162058881");
 
 	product = numMultiply(factor_a, factor_b);
 	numPrint(product, stdout);

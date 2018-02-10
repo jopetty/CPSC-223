@@ -23,29 +23,25 @@ struct num {
 
 Num * numCreate(const char * s)
 {
-	// Saitize input
-	int leading_digit_flag = 0;
+	Num *n;
+	
+	n = malloc(sizeof(struct num) + NUM_LENGTH * sizeof(int));
+	assert(n);
+
+	// TOOD: Set all values to 0
+	// TODO: Implement input parsing
+
 	size_t length = strlen(s);
 
 	for (size_t i = 0; i < length; i++) {
-		if (!isdigit(s[i])) { return ERR_BAD_NUM; }
-		if (s[i] != '0' && !leading_digit_flag) { leading_digit_flag = i; }
-	}
-
-	// If we encountered a non-zero digit, we can start from that point
-	// and disregard all the leading zeros. If not, we start from one 
-	// place before the end, and always get the 'same' zero Num.
-	leading_digit_flag = !leading_digit_flag ? (length - 1) : leading_digit_flag - 1;
-
-	// Create Num
-	Num * n = malloc(sizeof(struct num) + NUM_LENGTH * sizeof(int));
-	assert(n);
-
-	for (size_t i = leading_digit_flag; i < length; i++) {
+		if (!isdigit(s[i])) { 
+			numDestroy(n);
+			return ERR_BAD_NUM;
+		}
 		n->digits[length - (i + 1)] = (s[i] - ASCII_OFFST);
 	}
 
-	n->length = length - leading_digit_flag;
+	n->length = length;
 
 	return n;
 }
@@ -69,18 +65,6 @@ int numGetDigit(const Num * n, int i)
 
 Num * numAdd(const Num * x, const Num * y)
 {
-	/*
-	 *  Function numAdd(x, y) -> n
-	 *  -----------------------------
-	 *  @param: x (Num *)
-	 *  	A Num
-	 *  @param: y (Num *)
-	 *  	A Num
-	 *
-	 *  @return: n (Num *)
-	 *  	n = x + y
-	 */
-
 	int tmp = 0;
 	size_t i = 0;
 	int carry = 0;
@@ -131,12 +115,12 @@ static Num * scalarMultiply(const Num * x, int lambda, int shift)
 
 	Num * sum = numCreate("");
 
-	for (size_t i = 0; i < (size_t)lambda; i++) {
+	for (size_t i = 0; i < lambda; i++) {
 		sum = numAdd(sum, x);
 	}
 
-	for (size_t j = 0; j < (size_t)shift; j++) {
-		for (size_t k = 0; k < (size_t)(sum->length); k++) {
+	for (size_t j = 0; j < shift; j++) {
+		for (size_t k = 0; k < sum->length; k++) {
 			// TODO: Fix this line
 			sum->digits[sum->length - k] = sum->digits[sum->length - k - 1];
 		}
@@ -155,7 +139,7 @@ Num * numMultiply(const Num *x, const Num *y)
 
 	Num * product = numCreate("");
 
-	for (size_t i = 0; i < (size_t)(y->length); i++) {
+	for (size_t i = 0; i < y->length; i++) {
 		if (numGetDigit(y, i)) { // don't bother if y[i] is zero
 			product = numAdd(product, scalarMultiply(x, numGetDigit(y, i), i));
 		}
@@ -168,7 +152,8 @@ void numPrint(const Num * n, FILE * f)
 {
 	if (n->length == 0) {
 		fprintf(f, "0");
-	} else {
+	}
+	else {
 		for (size_t i = 0; i < (size_t)n->length; i++) {
 			fprintf(f, "%d", numGetDigit(n, n->length - (i+1)));
 		}
