@@ -96,12 +96,56 @@ Num * numAdd(const Num * x, const Num * y)
 	return sum;
 }
 
-Num * numMultiply(const Num *x, const Num *y) {
-	Num * product = numCreate("1");
+static Num * scalarMultiply(const Num * x, int lambda, int shift)
+{
+	/*
+	 *  Function scalarMultiply(x, lambda, shift) -> n
+	 *  -----------------------------
+	 *  @param: x (Num *)
+	 *  	The Num * which is to be multiplied by an integer
+	 * 		scalar lambda
+	 *  @param: lambda (int)
+	 *  	The scalar multiple coefficient
+	 *  @param: shift
+	 * 		The power of 10 associated with lambda
+	 *
+	 *  @return: n (Num *)
+	 *  	n = lambda * 10^shift * x
+	 */
+
+	Num * sum = numCreate("");
+
+	for (size_t i = 0; i < lambda; i++) {
+		sum = numAdd(sum, x);
+	}
+
+	for (size_t j = 0; j < shift; j++) {
+		for (size_t k = 0; k < sum->length; k++) {
+			// TODO: Fix this line
+			sum->digits[sum->length - k] = sum->digits[sum->length - k - 1];
+		}
+		sum->digits[0] = 0;
+		sum->length++;
+	}
+
+	return sum;
+}
+
+Num * numMultiply(const Num *x, const Num *y) 
+{
+	if (x->length == 0 || y->length == 0) {
+		return numCreate("");
+	}
+
+	Num * product = numCreate("");
+
+	for (size_t i = 0; i < y->length; i++) {
+		if (numGetDigit(y, i)) { // don't bother if y[i] is zero
+			product = numAdd(product, scalarMultiply(x, numGetDigit(y, i), i));
+		}
+	}
 
 	return product;
-
-	// TODO: Implement
 }
 
 void numPrint(const Num * n, FILE * f)

@@ -70,5 +70,40 @@ int main(int argc, char ** argv)
 	numDestroy(big_num_two);
 
 	printf("\n");
+
+	// Multiplicaiton
+	// for x, y in ((0, 123), (1,2), (29, 112), (37**50, 39**48)):
+	Num * factor_a = numCreate("1");
+	Num * factor_b = numCreate("2");
+
+	Num * product = numMultiply(factor_a, factor_b);
+	numPrint(product, stdout);
+	printf("\n");
+
+	numDestroy(factor_a);
+	numDestroy(factor_b);
+	numDestroy(product);
+
+	factor_a = numCreate("0");
+	factor_b = numCreate("123");
+
+	product = numMultiply(factor_a, factor_b);
+	numPrint(product, stdout);
+	printf("\n");
+
+	numDestroy(factor_a);
+	numDestroy(factor_b);
+	numDestroy(product);
+
+	factor_a = numCreate("29");
+	factor_b = numCreate("112");
+
+	product = numMultiply(factor_a, factor_b);
+	numPrint(product, stdout);
+	printf("\n");
+
+	numDestroy(factor_a);
+	numDestroy(factor_b);
+	numDestroy(product);
 	return 0;
 }
