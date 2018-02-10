@@ -16,7 +16,7 @@
 #include <string.h>
 
 #define NUM_MAX_LEN	(INT_MAX)	// Maximum number of digits
-#define ASCII_OFFST	(48)	// Conversion from 'digit' to digit
+#define ASCII_OFFST	(48)		// Conversion from 'digit' to digit
 
 struct num {
 	/*
@@ -48,14 +48,14 @@ Num *numCreate(const char *s)
 	 *
 	 *  @return: n (Num *)
 	 *  	n is the result of parsing the string 
-	 * 		into digits; eg, "1234" -> (4, 1234)
+	 * 	into digits; eg, "1234" -> (4, 1234)
 	 * 
 	 *  Procedure:
-	 * 		1. Leading zeros should not be counted
-	 * 		2. If s contains non-digit characters, 
-	 * 			return a NULL pointer
-	 * 		3. Result must be positive
-	 * 		4. Empty string "" becomes (0, 0)
+	 * 	1. Leading zeros should not be counted
+	 * 	2. If s contains non-digit characters, 
+	 * 	   return a NULL pointer
+	 * 	3. Result must be positive
+	 * 	4. Empty string "" becomes (0, 0)
 	 */
 
 	size_t length = strlen(s);
@@ -150,11 +150,11 @@ static Num *scalarMultiply(const Num *x, int lambda, int shift)
 	 *  -----------------------------
 	 *  @param: x (Num *)
 	 *  	The Num * which is to be multiplied by an integer
-	 * 		scalar lambda
+	 * 	scalar lambda
 	 *  @param: lambda (int)
 	 *  	The scalar multiple coefficient
 	 *  @param: shift
-	 * 		The power of 10 associated with lambda
+	 * 	The power of 10 associated with lambda
 	 *
 	 *  @return: n (Num *)
 	 *  	n = lambda * 10^shift * x
