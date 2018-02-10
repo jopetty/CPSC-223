@@ -77,7 +77,7 @@ Num * numAdd(const Num * x, const Num * y)
 	while (i < max_length || carry) {
 		tmp = numGetDigit(x, i) + numGetDigit(y, i) + carry;
 
-		if (tmp > 10) {
+		if (tmp >= 10) {
 			carry = tmp / 10;
 			tmp = tmp % 10;
 		} else {

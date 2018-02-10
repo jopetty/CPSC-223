@@ -60,9 +60,15 @@ int main(int argc, char ** argv)
 	Num * big_num_two = numCreate("23501800604186922700076639428968353822086810802999803164890312934792162058881");
 
 	numPrint(big_num_one, stdout);
+	printf("\n");
 	numPrint(big_num_two, stdout);
+	printf("\n");
+	sum = numAdd(big_num_one, big_num_two);
+	numPrint(sum, stdout);
 
 	numDestroy(big_num_one);
-	numDestroy(big_num_one);
+	numDestroy(big_num_two);
+
+	printf("\n");
 	return 0;
 }
