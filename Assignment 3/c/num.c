@@ -27,18 +27,37 @@ struct num {
 
 Num *numCreate(const char *s)
 {
+	/*
+	 *  Function numCreate(s) -> n
+	 *  -----------------------------
+	 *  @param: s (const char *)
+	 *  	The string of digits
+	 *
+	 *  @return: n (Num *)
+	 *  	n is the result of parsing the string 
+	 * 		into digits; eg, "1234" -> (4, 1234)
+	 * 
+	 *  Procedure:
+	 * 		1. Leading zeros should not be counted
+	 * 		2. If s contains non-digit characters, 
+	 * 			return a NULL pointer
+	 * 		3. Result must be positive
+	 * 		4. Empty string "" becomes (0, 0)
+	 */
+
 	// If we encountered a non-zero digit, we can start from that point
 	// and disregard all the leading zeros. If not, we treat input as 
 	// an empty string to get a Num of length 0
-	int start_pos = -1;
+	// int start_pos = -1;
 	size_t length = strlen(s);
+	size_t start_pos = length;
 
 	for (size_t i = 0; i < length; i++) {
 		if (!isdigit(s[i])) { return ERR_BAD_NUM; }
-		if (s[i] != '0' && (start_pos < 0)) { start_pos = i; }
+		if (s[i] != '0' && (start_pos == length)) { start_pos = i; }
 	}
 
-	if (start_pos < 0) { start_pos = length; }
+	// if (start_pos < 0) { start_pos = length; }
 
 	Num *n = malloc(sizeof(*n));
 	assert(n);
@@ -167,6 +186,7 @@ Num *numMultiply(const Num *x, const Num *y)
 	 *  times, and then shifting the sum by the place value of that digit
 	 *  (essentially, the grade-school way to multiply numbers).
 	 */
+
 	Num *product = numCreate("");
 
 	if (!(x->length && y->length)) {
@@ -174,7 +194,7 @@ Num *numMultiply(const Num *x, const Num *y)
 	}
 
 	for (size_t i = 0; i < (size_t)(y->length); i++) {
-		if (numGetDigit(y, i)) { // don't bother if y[i] is zero
+		if (numGetDigit(y, i)) { // don't bother if digit is zero
 			Num *s_mult = scalarMultiply(x, numGetDigit(y, i), i);
 			Num *sum = numAdd(product, s_mult);
 			numDestroy(product);
