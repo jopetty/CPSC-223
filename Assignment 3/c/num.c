@@ -15,11 +15,25 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define ERR_MEM_ALC	(1)	// 
 #define NUM_MAX_LEN	(INT_MAX)	// Maximum number of digits
 #define ASCII_OFFST	(48)	// Conversion from 'digit' to digit
 
 struct num {
+	/*
+	 *  Struct num { length, digits }
+	 *  -----------------------------
+	 *  @member: length (int)
+	 *  	Number of digits stored in the num. Because length is 
+	 * 	stored as an integer, the size of digits[] is fixed at
+	 * 	INT_MAX.
+	 *
+	 *  @member: digits (int[NUM_MAX_LEN])
+	 *  	Array of integers, each storing a value in the range [0,9].
+	 * 	Digits are stored in a little endian format, where
+	 * 	digit[0] is the least significant digit and
+	 * 	digit[length - 1] is the most significant.
+	 */
+
 	int length; // Cannot exceed INT_MAX by prototype of numGetDigit()
 	int digits[NUM_MAX_LEN];
 };
@@ -192,6 +206,9 @@ Num *numMultiply(const Num *x, const Num *y)
 
 	for (size_t i = 0; i < (size_t)(y->length); i++) {
 		if (numGetDigit(y, i)) { // don't bother if digit is zero
+			// Explicitly create s_mult, sum, and
+			// explicily destroy s_mult, product
+			// to avoid memory leaks
 			Num *s_mult = scalarMultiply(x, numGetDigit(y, i), i);
 			Num *sum = numAdd(product, s_mult);
 			numDestroy(product);
