@@ -15,7 +15,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define ERR_BAD_NUM (NULL)
+#define ERR_BAD_NUM	(NULL)
 #define ERR_MEM_ALC	(1)
 #define NUM_MAX_LEN	(INT_MAX)
 #define ASCII_OFFST	(48)
