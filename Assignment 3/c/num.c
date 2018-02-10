@@ -39,7 +39,7 @@ struct num * numCreate(const char * s)
 	return n;
 }
 
-void numDestroy(struct num * n)
+void numDestroy(Num * n)
 {
 	free(n);
 	n = NULL;
@@ -66,16 +66,16 @@ Num * numAdd(const Num * x, const Num * y)
 	max_length = (x->length > y->length) ? x->length : y->length;
 
 	while (i < max_length || carry) {
-
 		tmp = x->digits[i] + y->digits[i] + carry;
 
 		if (tmp > 10) {
-			// TODO: Fix carry
-			carry = tmp & 9; // mask for the tens digit
-			tmp = tmp & 9; // mask for the ones digit
+			carry = tmp / 10;
+			tmp = tmp % 10;
+		} else {
+			carry = 0;
 		}
 
-		i++;
+		sum->digits[i++] = tmp;
 	}
 
 	// TODO: Make sure we increment if we end up with a non-zero carry
