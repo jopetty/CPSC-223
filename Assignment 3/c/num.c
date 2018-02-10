@@ -9,7 +9,7 @@
 
 #define ERR_BAD_NUM (NULL)
 #define ERR_MEM_ALC	(1)
-#define NUM_LENGTH	(INT_MAX)
+#define NUM_MAX_LEN	(INT_MAX)
 #define ASCII_OFFST	(48)
 
 // Note that since numGetDigit(n, digit) takes `digit` as an int, we know that
@@ -18,40 +18,32 @@
 // Which makes implementing operations much much easier
 struct num {
 	int length;
-	int digits[NUM_LENGTH];
+	int digits[NUM_MAX_LEN];
 };
 
 Num * numCreate(const char * s)
 {
-	// Saitize input
+	// If we encountered a non-zero digit, we can start from that point
+	// and disregard all the leading zeros. If not, we treat input as 
+	// an empty string to get a Num of length 0
+	int start_pos = -1;
 	size_t length = strlen(s);
 
 	for (size_t i = 0; i < length; i++) {
 		if (!isdigit(s[i])) { return ERR_BAD_NUM; }
+		if (s[i] != '0' && (start_pos < 0)) { start_pos = i; }
 	}
 
-	// If we encountered a non-zero digit, we can start from that point
-	// and disregard all the leading zeros. If not, we start from one 
-	// place before the end, and always get the 'same' zero Num.
-	int start_pos = -1;
-	for (size_t j = 0; j < length; j++) {
-		if (s[j] != '0' ) { start_pos = j; break; }
-	}
+	if (start_pos < 0) { start_pos = length; }
 
-	if (start_pos < 0) {
-		start_pos = length;
-	}
-
-	// Create Num
-	Num * n = malloc(sizeof(struct num) + NUM_LENGTH * sizeof(int));
+	Num * n = malloc(sizeof(*n));
 	assert(n);
 
-	for (size_t i = start_pos; i < length; i++) {
-		n->digits[length - (i + 1)] = (s[i] - ASCII_OFFST);
+	for (size_t j = start_pos; j < length; j++) {
+		n->digits[length - (j + 1)] = (s[j] - ASCII_OFFST);
 	}
 
 	n->length = length - start_pos;
-
 	return n;
 }
 
@@ -137,12 +129,13 @@ static Num * scalarMultiply(const Num * x, int lambda, int shift)
 	Num * sum = numCreate("");
 
 	for (size_t i = 0; i < (size_t)lambda; i++) {
-		sum = numAdd(sum, x);
+		Num * result = numAdd(sum, x);
+		numDestroy(sum);
+		sum = result;
 	}
 
 	for (size_t j = 0; j < (size_t)shift; j++) {
 		for (size_t k = 0; k < (size_t)(sum->length); k++) {
-			// TODO: Fix this line
 			sum->digits[sum->length - k] = sum->digits[sum->length - k - 1];
 		}
 		sum->digits[0] = 0;
@@ -154,15 +147,19 @@ static Num * scalarMultiply(const Num * x, int lambda, int shift)
 
 Num * numMultiply(const Num *x, const Num *y) 
 {
-	if (x->length == 0 || y->length == 0) {
-		return numCreate("");
-	}
-
 	Num * product = numCreate("");
+
+	if (x->length == 0 || y->length == 0) {
+		return product;
+	}
 
 	for (size_t i = 0; i < (size_t)(y->length); i++) {
 		if (numGetDigit(y, i)) { // don't bother if y[i] is zero
-			product = numAdd(product, scalarMultiply(x, numGetDigit(y, i), i));
+			Num * s_mult = scalarMultiply(x, numGetDigit(y, i), i);
+			Num * sum = numAdd(product, s_mult);
+			numDestroy(product);
+			product = sum;
+			numDestroy(s_mult);
 		}
 	}
 

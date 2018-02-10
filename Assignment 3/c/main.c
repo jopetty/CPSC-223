@@ -106,5 +106,15 @@ int main(int argc, char ** argv)
 	numDestroy(factor_a);
 	numDestroy(factor_b);
 	numDestroy(product);
+
+	// Num * copyee = numCreate("29");
+	// Num * copyer = numCreate("112");
+	// showNumber(copyee);
+	// showNumber(copyer);
+	// copyer = copyee;
+	// showNumber(copyer);
+	// numDestroy(copyee);
+	// showNumber(copyer);
+	// numDestroy(copyer);
 	return 0;
 }
