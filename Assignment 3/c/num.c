@@ -19,7 +19,7 @@ struct num {
 	int digits[NUM_LENGTH];
 };
 
-struct num * numCreate(const char *s)
+struct num * numCreate(const char * s)
 {
 	struct num *n;
 	
@@ -39,12 +39,12 @@ struct num * numCreate(const char *s)
 	return n;
 }
 
-void numDestroy(struct num *n)
+void numDestroy(struct num * n)
 {
 	free(n);
 }
 
-int numGetDigit(const Num *n, int i)
+int numGetDigit(const Num * n, int i)
 {
 	if (i < n->length && i > 0) {
 		return n->digits[NUM_LENGTH - i];
@@ -53,7 +53,7 @@ int numGetDigit(const Num *n, int i)
 	}
 }
 
-Num * numAdd(const Num *x, const Num *y)
+Num * numAdd(const Num * x, const Num * y)
 {
 	int tmp = 0;
 	size_t i = 0;
@@ -85,9 +85,14 @@ Num * numAdd(const Num *x, const Num *y)
 
 // Num * numMultiply(const Num *x, const Num *y);
 
-void numPrint(const Num *n, FILE *f)
+void numPrint(const Num * n, FILE * f)
 {
-	for (size_t i = 0; i < (size_t)n->length; i++) {
-		fprintf(f, "%d", n->digits[NUM_LENGTH - i]);
+	if (n->length == 0) {
+		fprintf(f, "0");
+	}
+	else {
+		for (size_t i = 0; i < (size_t)n->length; i++) {
+			fprintf(f, "%d", n->digits[NUM_LENGTH - i]);
+		}
 	}
 }
