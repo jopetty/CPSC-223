@@ -42,6 +42,7 @@ struct num * numCreate(const char * s)
 void numDestroy(struct num * n)
 {
 	free(n);
+	n = NULL;
 }
 
 int numGetDigit(const Num * n, int i)
