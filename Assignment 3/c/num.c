@@ -25,7 +25,7 @@ struct num {
 	int digits[NUM_MAX_LEN];
 };
 
-Num * numCreate(const char * s)
+Num *numCreate(const char *s)
 {
 	// If we encountered a non-zero digit, we can start from that point
 	// and disregard all the leading zeros. If not, we treat input as 
@@ -40,7 +40,7 @@ Num * numCreate(const char * s)
 
 	if (start_pos < 0) { start_pos = length; }
 
-	Num * n = malloc(sizeof(*n));
+	Num *n = malloc(sizeof(*n));
 	assert(n);
 
 	for (size_t j = start_pos; j < length; j++) {
@@ -51,7 +51,7 @@ Num * numCreate(const char * s)
 	return n;
 }
 
-void numDestroy(Num * n)
+void numDestroy(Num *n)
 {
 	if (n) {
 		free(n);
@@ -59,7 +59,7 @@ void numDestroy(Num * n)
 	}
 }
 
-int numGetDigit(const Num * n, int i)
+int numGetDigit(const Num *n, int i)
 {
 	if (i < n->length && i >= 0) {
 		return n->digits[i];
@@ -68,7 +68,7 @@ int numGetDigit(const Num * n, int i)
 	}
 }
 
-Num * numAdd(const Num * x, const Num * y)
+Num *numAdd(const Num *x, const Num *y)
 {
 	/*
 	 *  Function numAdd(x, y) -> n
@@ -87,7 +87,7 @@ Num * numAdd(const Num * x, const Num * y)
 	int carry = 0;
 	size_t max_length = 0;
 
-	Num * sum = numCreate("");
+	Num *sum = numCreate("");
 
 	max_length = (x->length > y->length) ? x->length : y->length;
 
@@ -113,7 +113,7 @@ Num * numAdd(const Num * x, const Num * y)
 	return sum;
 }
 
-static Num * scalarMultiply(const Num * x, int lambda, int shift)
+static Num *scalarMultiply(const Num *x, int lambda, int shift)
 {
 	/*
 	 *  Function scalarMultiply(x, lambda, shift) -> n
@@ -130,10 +130,10 @@ static Num * scalarMultiply(const Num * x, int lambda, int shift)
 	 *  	n = lambda * 10^shift * x
 	 */
 
-	Num * sum = numCreate("");
+	Num *sum = numCreate("");
 
 	for (size_t i = 0; i < (size_t)lambda; i++) {
-		Num * result = numAdd(sum, x);
+		Num *result = numAdd(sum, x);
 		numDestroy(sum);
 		sum = result;
 	}
@@ -149,9 +149,9 @@ static Num * scalarMultiply(const Num * x, int lambda, int shift)
 	return sum;
 }
 
-Num * numMultiply(const Num *x, const Num *y) 
+Num *numMultiply(const Num *x, const Num *y) 
 {
-	Num * product = numCreate("");
+	Num *product = numCreate("");
 
 	if (x->length == 0 || y->length == 0) {
 		return product;
@@ -159,8 +159,8 @@ Num * numMultiply(const Num *x, const Num *y)
 
 	for (size_t i = 0; i < (size_t)(y->length); i++) {
 		if (numGetDigit(y, i)) { // don't bother if y[i] is zero
-			Num * s_mult = scalarMultiply(x, numGetDigit(y, i), i);
-			Num * sum = numAdd(product, s_mult);
+			Num *s_mult = scalarMultiply(x, numGetDigit(y, i), i);
+			Num *sum = numAdd(product, s_mult);
 			numDestroy(product);
 			numDestroy(s_mult);
 			product = sum;
@@ -170,7 +170,7 @@ Num * numMultiply(const Num *x, const Num *y)
 	return product;
 }
 
-void numPrint(const Num * n, FILE * f)
+void numPrint(const Num *n, FILE *f)
 {
 	if (n->length == 0) {
 		fprintf(f, "0");
@@ -181,7 +181,7 @@ void numPrint(const Num * n, FILE * f)
 	}
 }
 
-void showNumber(const Num * n) 
+void showNumber(const Num *n) 
 {
 	printf("{ %d : ", n->length);
 	numPrint(n, stdout);
