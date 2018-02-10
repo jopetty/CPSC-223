@@ -151,6 +151,22 @@ static Num *scalarMultiply(const Num *x, int lambda, int shift)
 
 Num *numMultiply(const Num *x, const Num *y) 
 {
+	/*
+	 *  Function numMultiply(x, y) -> n
+	 *  -----------------------------
+	 *  @param: x (Num *)
+	 *  	A Num * factor
+	 *  @param: y (Num *)
+	 *  	A Num * factor
+	 *
+	 *  @return: n (Num *)
+	 *  	n = x * y
+	 * 
+	 *  This implements a naïve multiplication algortithm,
+	 *  iterating through each digit of y, adding x together that many
+	 *  times, and then shifting the sum by the place value of that digit
+	 *  (essentially, the grade-school way to multiply numbers).
+	 */
 	Num *product = numCreate("");
 
 	if (!(x->length && y->length)) {
