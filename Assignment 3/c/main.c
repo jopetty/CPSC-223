@@ -55,5 +55,14 @@ int main(int argc, char ** argv)
 
 	printf("\n");
 
+	// BIG addition
+	Num * big_num_one = numCreate("2570906032674836362493098841827039250513722520868666904498196035555315023364249");
+	Num * big_num_two = numCreate("23501800604186922700076639428968353822086810802999803164890312934792162058881");
+
+	numPrint(big_num_one, stdout);
+	numPrint(big_num_two, stdout);
+
+	numDestroy(big_num_one);
+	numDestroy(big_num_one);
 	return 0;
 }

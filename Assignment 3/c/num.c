@@ -3,9 +3,11 @@
 #include <string.h>
 #include <limits.h>
 #include <assert.h>
+#include <ctype.h>
 
 #include "num.h"
 
+#define ERR_BAD_NUM (NULL)
 #define ERR_MEM_ALC	(1)
 #define NUM_LENGTH	(INT_MAX)
 #define ASCII_OFFST	(48)
@@ -19,18 +21,23 @@ struct num {
 	int digits[NUM_LENGTH];
 };
 
-struct num * numCreate(const char * s)
+Num * numCreate(const char * s)
 {
-	struct num *n;
+	Num *n;
 	
 	n = malloc(sizeof(struct num) + NUM_LENGTH * sizeof(int));
 	assert(n);
 
 	// TOOD: Set all values to 0
+	// TODO: Implement input parsing
 
 	size_t length = strlen(s);
 
 	for (size_t i = 0; i < length; i++) {
+		if (!isdigit(s[i])) { 
+			numDestroy(n);
+			return ERR_BAD_NUM;
+		}
 		n->digits[length - (i + 1)] = (s[i] - ASCII_OFFST);
 	}
 
@@ -41,8 +48,10 @@ struct num * numCreate(const char * s)
 
 void numDestroy(Num * n)
 {
-	free(n);
-	n = NULL;
+	if (n) {
+		free(n);
+		n = NULL;
+	}
 }
 
 int numGetDigit(const Num * n, int i)
@@ -87,7 +96,13 @@ Num * numAdd(const Num * x, const Num * y)
 	return sum;
 }
 
-// Num * numMultiply(const Num *x, const Num *y);
+Num * numMultiply(const Num *x, const Num *y) {
+	Num * product = numCreate("1");
+
+	return product;
+
+	// TODO: Implement
+}
 
 void numPrint(const Num * n, FILE * f)
 {
