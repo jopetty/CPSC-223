@@ -22,20 +22,18 @@ struct num {
 	/*
 	 *  Struct num { length, digits }
 	 *  -----------------------------
-	 *  @member: length (int)
-	 *  	Number of digits stored in the num. Because length is 
-	 * 	stored as an integer, the size of digits[] is fixed at
-	 * 	INT_MAX.
+	 *  @member: length (size_t)
+	 *  	Number of digits stored in the num.
 	 *
-	 *  @member: digits (int[NUM_MAX_LEN])
-	 *  	Array of integers, each storing a value in the range [0,9].
+	 *  @member: digits (*int[NUM_MAX_LEN])
+	 *  	Pointer to array of integers, each storing a value in the range [0,9].
 	 * 	Digits are stored in a little endian format, where
 	 * 	digit[0] is the least significant digit and
 	 * 	digit[length - 1] is the most significant.
 	 */
 
-	int length;
-	int digits[NUM_MAX_LEN];
+	size_t length;
+	uint8_t *digits;
 };
 
 Num *numCreate(const char *s)
@@ -73,6 +71,14 @@ Num *numCreate(const char *s)
 		return NULL;
 	}
 
+	n->digits = malloc(NUM_MAX_LEN * sizeof(uint8_t));
+	if (!n->digits) {
+		fprintf(stderr, "Unable to allcate memory for digits.\n");
+		numDestroy(n);
+		assert(n->digits);
+		return NULL;
+	}
+
 	for (size_t j = start_pos; j < length; j++) {
 		n->digits[length - (j + 1)] = (s[j] - ASCII_OFFST); // '1' -> 1, etc
 	}
@@ -96,6 +102,10 @@ void numDestroy(Num *n)
 	 *  Performance is O(1)
 	 */
 	if (n) {
+		if (n->digits) {
+			free(n->digits);
+			n->digits = NULL;
+		}
 		free(n);
 		n = NULL;
 	}
@@ -119,7 +129,7 @@ int numGetDigit(const Num *n, int i)
 	 *  Performance is O(1)
 	 */
 
-	if (i < n->length && i >= 0) {
+	if (i >= 0 && (size_t)i < n->length) {
 		return n->digits[i];
 	} else {
 		return 0;
