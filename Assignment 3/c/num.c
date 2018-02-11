@@ -11,11 +11,12 @@
 #include <assert.h>
 #include <ctype.h>
 #include <limits.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#define NUM_MAX_LEN	(INT_MAX)	// Maximum number of digits
+#define NUM_MAX_LEN	(UINT_MAX)	// Maximum number of digits
 #define ASCII_OFFST	(48)		// Conversion from 'digit' to digit
 
 struct num {
