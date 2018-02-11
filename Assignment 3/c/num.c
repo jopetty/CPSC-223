@@ -102,7 +102,7 @@ int numGetDigit(const Num *n, int i)
 	 *  @return: d (int)
 	 *  	ith most significant digit of x
 	 * 
-	 *  Performance is O(n)
+	 *  Performance is O(1)
 	 */
 
 	if (i < n->length && i >= 0) {
