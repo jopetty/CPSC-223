@@ -43,6 +43,4 @@ Num * numMultiply(const Num *x, const Num *y);
  * Do not print any leading zeros unless n is zero. */
 void numPrint(const Num *n, FILE *f);
 
-void showNumber(const Num * n);
-
 #endif /* _NUM_H */

@@ -83,6 +83,18 @@ Num *numCreate(const char *s)
 
 void numDestroy(Num *n)
 {
+	/*
+	 *  Function numDestroy(n)
+	 *  -----------------------------
+	 *  @param: n (Num *)
+	 *  	A Num
+	 * 
+	 *  Checks to make sure n is not NULL, free()'s n and
+	 *  sets it to a NULL pointer to ensure attempts to
+	 *  use it afterwards cause a crash.
+	 * 
+	 *  Performance is O(1)
+	 */
 	if (n) {
 		free(n);
 		n = NULL;
@@ -100,7 +112,9 @@ int numGetDigit(const Num *n, int i)
 	 *  	The digit number, in range [0, n->length - 1]
 	 *
 	 *  @return: d (int)
-	 *  	ith most significant digit of x
+	 *  	ith most significant digit of x.
+	 * 		If i is not in range [0, n->length - 1],
+	 * 		d = 0.
 	 * 
 	 *  Performance is O(1)
 	 */
@@ -244,11 +258,4 @@ void numPrint(const Num *n, FILE *f)
 	} else {
 		fprintf(f, "0");
 	}
-}
-
-void showNumber(const Num *n) 
-{
-	printf("{ %d : ", n->length);
-	numPrint(n, stdout);
-	printf(" }\n");
 }
