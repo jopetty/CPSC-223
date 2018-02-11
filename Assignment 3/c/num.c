@@ -18,7 +18,7 @@
 
 #define NUM_MAX_LEN	(UINT_MAX)	// Maximum number of digits
 #define ASCII_OFFST	(48)		// Conversion from 'digit' to digit
-
+ 
 struct num {
 	/*
 	 *  Struct num { length, digits }
@@ -27,10 +27,9 @@ struct num {
 	 *  	Number of digits stored in the num.
 	 *
 	 *  @member: digits (*uint8_t[NUM_MAX_LEN])
-	 *  	Array of uint8_t, each storing a value in the range [0,9].
-	 * 	Digits are stored in a little endian format, where
-	 * 	digit[0] is the least significant digit and
-	 * 	digit[length - 1] is the most significant.
+	 *  	Array of uint8_t, each storing a value in the range [0,9]. Digits 
+	 * 	are stored in a little endian format, where digit[0] is the least 
+	 * 	significant digit and digit[length - 1] is the most significant.
 	 */
 
 	size_t length;
@@ -46,13 +45,12 @@ Num *numCreate(const char *s)
 	 *  	The string of digits
 	 *
 	 *  @return: n (Num *)
-	 *  	n is the result of parsing the string 
-	 * 	into digits; eg, "1234" -> (4, 1234)
+	 *  	n is the result of parsing the string into digits; 
+	 * 	eg, "1234" -> (4, 1234)
 	 * 
 	 *  Procedure:
 	 * 	1. Leading zeros should not be counted
-	 * 	2. If s contains non-digit characters, 
-	 * 	   return a NULL pointer
+	 * 	2. If s contains non-digit characters, return a NULL pointer
 	 * 	3. Result must be positive
 	 * 	4. Empty string "" becomes (0, 0)
 	 */
@@ -88,9 +86,8 @@ void numDestroy(Num *n)
 	 *  @param: n (Num *)
 	 *  	A Num
 	 * 
-	 *  Checks to make sure n is not NULL, free()'s n and
-	 *  sets it to a NULL pointer to ensure attempts to
-	 *  use it afterwards cause a crash.
+	 *  Checks to make sure n is not NULL, free()'s n and sets it to a NULL 
+	 * 	pointer to ensure attempts to use it afterwards cause a crash.
 	 * 
 	 *  Performance is O(1)
 	 */
@@ -112,9 +109,8 @@ int numGetDigit(const Num *n, int i)
 	 *  	The digit number, in range [0, n->length - 1]
 	 *
 	 *  @return: d (int)
-	 *  	ith most significant digit of x.
-	 * 		If i is not in range [0, n->length - 1],
-	 * 		d = 0.
+	 *  	ith most significant digit of x. If i is not in 
+	 * 	range [0, n->length - 1], d = 0.
 	 * 
 	 *  Performance is O(1)
 	 */
@@ -140,11 +136,11 @@ Num *numAdd(const Num *x, const Num *y)
 	 *  	n = x + y
 	 */
 
-	int tmp = 0;
 	size_t i = 0;
-	int carry = 0;
+	uint_fast8_t tmp = 0;
 	size_t max_length = 0;
-
+	uint_fast8_t carry = 0;
+	
 	Num *sum = numCreate("");
 
 	max_length = (x->length > y->length) ? x->length : y->length;
@@ -177,8 +173,7 @@ static Num *scalarMultiply(const Num *x, int lambda, int shift)
 	 *  Function scalarMultiply(x, lambda, shift) -> n
 	 *  -----------------------------
 	 *  @param: x (Num *)
-	 *  	The Num * which is to be multiplied by an integer
-	 * 	scalar lambda
+	 *  	The Num * which is to be multiplied by an integer scalar lambda.
 	 *  @param: lambda (int)
 	 *  	The scalar multiple coefficient
 	 *  @param: shift
@@ -220,10 +215,10 @@ Num *numMultiply(const Num *x, const Num *y)
 	 *  @return: n (Num *)
 	 *  	n = x * y
 	 * 
-	 *  This implements a naïve multiplication algortithm,
-	 *  iterating through each digit of y, adding x together that many
-	 *  times, and then shifting the sum by the place value of that digit
-	 *  (essentially, the grade-school way to multiply numbers).
+	 *  This implements a naïve multiplication algortithm, iterating through 
+	 * 	each digit of y, adding x together that many times, and then shifting 
+	 * 	the sum by the place value of that digit (essentially, the grade-school
+	 *	way to multiply numbers).
 	 */
 
 	Num *product = numCreate("");
@@ -233,10 +228,8 @@ Num *numMultiply(const Num *x, const Num *y)
 	}
 
 	for (size_t i = 0; i < (size_t)(y->length); i++) {
-		if (numGetDigit(y, i)) { // don't bother if digit is zero
-			// Explicitly create s_mult, sum, and
-			// explicily destroy s_mult, product
-			// to avoid memory leaks
+		if (numGetDigit(y, i)) {
+			// Explicitly create & destory stucts to prevent mem leaks
 			Num *s_mult = scalarMultiply(x, numGetDigit(y, i), i);
 			Num *sum = numAdd(product, s_mult);
 			numDestroy(product);
@@ -250,6 +243,15 @@ Num *numMultiply(const Num *x, const Num *y)
 
 void numPrint(const Num *n, FILE *f)
 {
+	/*
+	 *  Function numPrint(n, f)
+	 *  -----------------------------
+	 *  @param: n (const Num *)
+	 *  	A Num *
+	 *  @param: f (FILE *)
+	 *  	File to which number is written
+	 */
+
 	if (n->length) {
 		for (size_t i = 0; i < (size_t)n->length; i++) {
 			fprintf(f, "%d", numGetDigit(n, n->length - (i + 1)));
