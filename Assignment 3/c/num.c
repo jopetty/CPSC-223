@@ -91,6 +91,20 @@ void numDestroy(Num *n)
 
 int numGetDigit(const Num *n, int i)
 {
+	/*
+	 *  Function numGetDigit(n, i) -> d
+	 *  -----------------------------
+	 *  @param: n (Num *)
+	 *  	A Num
+	 *  @param: i (int)
+	 *  	The digit number, in range [0, n->length - 1]
+	 *
+	 *  @return: d (int)
+	 *  	ith most significant digit of x
+	 * 
+	 *  Performance is O(n)
+	 */
+
 	if (i < n->length && i >= 0) {
 		return n->digits[i];
 	} else {
