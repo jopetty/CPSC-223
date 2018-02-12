@@ -18,7 +18,7 @@
 
 #define NUM_MAX_LEN	(UINT_MAX)	// Maximum number of digits
 #define ASCII_OFFST	(48)		// Conversion from 'digit' to digit
- 
+
 struct num {
 	/*
 	 *  Struct num { length, digits }
@@ -87,14 +87,37 @@ void numDestroy(Num *n)
 	 *  	A Num
 	 * 
 	 *  Checks to make sure n is not NULL, free()'s n and sets it to a NULL 
-	 * 	pointer to ensure attempts to use it afterwards cause a crash.
+	 *  pointer to ensure attempts to use it afterwards cause a crash.
 	 * 
 	 *  Performance is O(1)
 	 */
-	
+
 	if (n) {
 		free(n);
 		n = NULL;
+	}
+}
+
+static inline uint8_t _numGetDigit(const Num *n, size_t i) 
+{
+	/*
+	 *  Function _numGetDigit(n, i) -> d
+	 *  -----------------------------
+	 *  @param: n (Num *)
+	 *  	A Num
+	 *  @param: i (size_t)
+	 *  	The digit number, in range [0, n->length - 1]
+	 *
+	 *  @return: d (uint8_t)
+	 *  	ith most significant digit of x. If i is not in 
+	 * 	range [0, n->length - 1], d = 0.
+	 * 
+	 *  Performance is O(1)
+	 */
+	if (i < n->length) {
+		return n->digits[i];
+	} else {
+		return 0;
 	}
 }
 
@@ -112,11 +135,14 @@ int numGetDigit(const Num *n, int i)
 	 *  	ith most significant digit of x. If i is not in 
 	 * 	range [0, n->length - 1], d = 0.
 	 * 
-	 *  Performance is O(1)
+	 *  This is a wrapper for _numGetDigit, which permits indexing to a value
+	 *  much higher that INT_MAX, and returns a uint8_t, since that is how the 
+	 *  digits are stored internally. Since num.h specifies a specific prototype
+	 *  for numGetDigit, we validate the arguments and pass to _numGetDigit().
 	 */
 
-	if (i >= 0 && (size_t)i < n->length) {
-		return n->digits[i];
+	if (i >= 0) {
+		return (int)_numGetDigit(n, (size_t)i);
 	} else {
 		return 0;
 	}
@@ -140,7 +166,7 @@ Num *numAdd(const Num *x, const Num *y)
 	uint_fast8_t tmp = 0;
 	size_t max_length = 0;
 	uint_fast8_t carry = 0;
-	
+
 	Num *sum = numCreate("");
 
 	max_length = (x->length > y->length) ? x->length : y->length;
@@ -167,7 +193,7 @@ Num *numAdd(const Num *x, const Num *y)
 	return sum;
 }
 
-static Num *scalarMultiply(const Num *x, int lambda, int shift)
+static Num *_scalarMultiply(const Num *x, int lambda, int shift)
 {
 	/*
 	 *  Function scalarMultiply(x, lambda, shift) -> n
@@ -230,7 +256,7 @@ Num *numMultiply(const Num *x, const Num *y)
 	for (size_t i = 0; i < (size_t)(y->length); i++) {
 		if (numGetDigit(y, i)) {
 			// Explicitly create & destory stucts to prevent mem leaks
-			Num *s_mult = scalarMultiply(x, numGetDigit(y, i), i);
+			Num *s_mult = _scalarMultiply(x, numGetDigit(y, i), i);
 			Num *sum = numAdd(product, s_mult);
 			numDestroy(product);
 			numDestroy(s_mult);
@@ -256,7 +282,7 @@ void numPrint(const Num *n, FILE *f)
 		for (size_t i = 0; i < (size_t)n->length; i++) {
 			fprintf(f, "%d", numGetDigit(n, n->length - (i + 1)));
 		}
-		
+
 	} else {
 		fprintf(f, "0");
 	}
