@@ -17,7 +17,7 @@
 #include <string.h>
 
 #define NUM_MAX_LEN	(UINT_MAX)	// Maximum number of digits
-#define ASCII_OFFST	(48)		// Conversion from 'digit' to digit
+#define ASCII_OFFST	('0')		// Conversion from 'digit' to digit
 
 struct num {
 	/*
@@ -114,6 +114,7 @@ static inline uint8_t _numGetDigit(const Num *n, size_t i)
 	 * 
 	 *  Performance is O(1)
 	 */
+
 	if (i < n->length) {
 		return n->digits[i];
 	} else {
