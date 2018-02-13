@@ -80,6 +80,7 @@ int main(int argc, char ** argv)
 
 	numDestroy(big_num_one);
 	numDestroy(big_num_two);
+	numDestroy(sum);
 
 	// Multiplicaiton
 	// for x, y in ((0, 123), (1,2), (29, 112), (37**50, 39**48)):

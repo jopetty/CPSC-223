@@ -11,6 +11,7 @@
 #include <assert.h>
 #include <ctype.h>
 #include <limits.h>
+#include <math.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -26,17 +27,32 @@ struct num {
 	 *  @member: length (size_t)
 	 *  	Number of digits stored in the num.
 	 *
-	 *  @member: digits (*uint8_t[NUM_MAX_LEN])
+	 *  @member: digits (uint8_t[NUM_MAX_LEN])
 	 *  	Array of uint8_t, each storing a value in the range [0,9]. Digits 
 	 * 	are stored in a little endian format, where digit[0] is the least 
 	 * 	significant digit and digit[length - 1] is the most significant.
 	 */
 
 	size_t length;
-	uint8_t digits[NUM_MAX_LEN];
+	uint8_t digits[];
 };
 
-Num *numCreate(const char *s)
+static Num * _numCreateWithLength(const size_t length)
+{
+	Num *n = malloc(sizeof(*n) + length);
+
+	if (!n) {
+		fprintf(stderr, "Unable to allocate %zu bytes of memory.\n", length);
+		return NULL;
+	}
+
+	memset(n->digits, 0, length);
+
+	n->length = length;
+	return n;
+}
+
+Num * numCreate(const char *s)
 {
 	/*
 	 *  Function numCreate(s) -> n
@@ -63,10 +79,10 @@ Num *numCreate(const char *s)
 		if (s[i] != '0' && (start_position == length)) { start_position = i; }
 	}
 
-	Num *n = malloc(sizeof(*n));
+	Num *n = _numCreateWithLength(length - start_position);
+
 	if (!n) {
 		fprintf(stderr, "Unable to allocate memory for Num('%s').\n", s);
-		assert(n);
 		return NULL;
 	}
 
@@ -74,7 +90,6 @@ Num *numCreate(const char *s)
 		n->digits[length - (j + 1)] = (s[j] - ASCII_OFFST); // '1' -> 1, etc
 	}
 
-	n->length = length - start_position;
 	return n;
 }
 
@@ -149,7 +164,7 @@ int numGetDigit(const Num *n, int i)
 	}
 }
 
-Num *numAdd(const Num *x, const Num *y)
+Num * numAdd(const Num *x, const Num *y)
 {
 	/*
 	 *  Function numAdd(x, y) -> n
@@ -168,9 +183,10 @@ Num *numAdd(const Num *x, const Num *y)
 	size_t max_length = 0;
 	uint_fast8_t carry = 0;
 
-	Num *sum = numCreate("");
-
 	max_length = (x->length > y->length) ? x->length : y->length;
+
+	// TODO: Ensure max_length + 1 <= NUM_MAX_LEN
+	Num *sum = _numCreateWithLength(max_length + 1);
 
 	while (i < max_length || carry) {
 		tmp = numGetDigit(x, i) + numGetDigit(y, i) + carry;
@@ -194,7 +210,7 @@ Num *numAdd(const Num *x, const Num *y)
 	return sum;
 }
 
-static Num *_scalarMultiply(const Num *x, int lambda, int shift)
+static Num * _scalarMultiply(const Num *x, int lambda, int shift)
 {
 	/*
 	 *  Function scalarMultiply(x, lambda, shift) -> n
@@ -210,7 +226,7 @@ static Num *_scalarMultiply(const Num *x, int lambda, int shift)
 	 *  	n = lambda * 10^shift * x
 	 */
 
-	Num *sum = numCreate("");
+	Num *sum = _numCreateWithLength(0);
 
 	for (size_t i = 0; i < (size_t)lambda; i++) {
 		Num *result = numAdd(sum, x);
@@ -218,18 +234,17 @@ static Num *_scalarMultiply(const Num *x, int lambda, int shift)
 		sum = result;
 	}
 
-	for (size_t j = 0; j < (size_t)shift; j++) {
-		for (size_t k = 0; k < (size_t)(sum->length); k++) {
-			sum->digits[sum->length - k] = sum->digits[sum->length - (k + 1)];
-		}
-		sum->digits[0] = 0;
-		sum->length++;
+	Num *shifted_sum = _numCreateWithLength(sum->length + shift);
+
+	for (size_t j = 0; j < sum->length; j++) {
+		shifted_sum->digits[j + shift] = sum->digits[j];
 	}
 
-	return sum;
+	numDestroy(sum);
+	return shifted_sum;
 }
 
-Num *numMultiply(const Num *x, const Num *y) 
+Num * numMultiply(const Num *x, const Num *y) 
 {
 	/*
 	 *  Function numMultiply(x, y) -> n
@@ -248,11 +263,14 @@ Num *numMultiply(const Num *x, const Num *y)
 	 *	way to multiply numbers).
 	 */
 
-	Num *product = numCreate("");
-
 	if (!(x->length && y->length)) {
-		return product;
+		return _numCreateWithLength(0);
 	}
+
+	size_t length = floorl(log10l(x->length) + log10l(y->length)) + 1;
+	length = (length > NUM_MAX_LEN) ? NUM_MAX_LEN : length;
+
+	Num *product = _numCreateWithLength(length);
 
 	for (size_t i = 0; i < (size_t)(y->length); i++) {
 		if (numGetDigit(y, i)) {
