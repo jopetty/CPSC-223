@@ -119,5 +119,6 @@ int main(int argc, char ** argv)
 	numDestroy(factor_a);
 	numDestroy(factor_b);
 	numDestroy(product);
+
 	return 0;
 }

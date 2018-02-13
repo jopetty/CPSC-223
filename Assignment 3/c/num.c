@@ -10,7 +10,6 @@
 
 #include <ctype.h>
 #include <limits.h>
-#include <math.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -26,7 +25,7 @@ struct num {
 	 *  @member: length (size_t)
 	 *  	Number of digits stored in the num.
 	 *
-	 *  @member: digits (uint8_t[NUM_MAX_LEN])
+	 *  @member: digits (uint8_t[])
 	 *  	Array of uint8_t, each storing a value in the range [0,9]. Digits 
 	 * 	are stored in a little endian format, where digit[0] is the least 
 	 * 	significant digit and digit[length - 1] is the most significant.
@@ -35,6 +34,27 @@ struct num {
 	size_t length;
 	uint8_t digits[];
 };
+
+static size_t _log(size_t length)
+{
+	/*
+	 *  Function _log(l) -> d
+	 *  -----------------------------
+	 *  @param: l ( size_t)
+	 *  	Number of digits in Num
+	 *
+	 *  @return: d (size_t)
+	 *  	Returns floor(log_2(l))
+	 */
+
+	size_t binary_logarithm = 0;
+	
+	while ((length >> binary_logarithm) > 1) {
+		binary_logarithm++;
+	}
+
+	return binary_logarithm;
+}
 
 static Num * _numCreateWithLength(const size_t length)
 {
@@ -164,6 +184,9 @@ int numGetDigit(const Num *n, int i)
 	 *  much higher that INT_MAX, and returns a uint8_t, since that is how the 
 	 *  digits are stored internally. Since num.h specifies a specific prototype
 	 *  for numGetDigit, we validate the arguments and pass to _numGetDigit().
+	 * 
+	 *  This is used in numPrint so that all digits can be printed even if
+	 *  length exceeds INT_MAX.
 	 */
 
 	if (i >= 0) {
@@ -277,7 +300,7 @@ Num * numMultiply(const Num *x, const Num *y)
 
 	if (!(x->length && y->length)) { return _numCreateWithLength(0); }
 
-	size_t length = floorl(log10l(x->length) + log10l(y->length)) + 1;
+	size_t length = _log(x->length) + _log(y->length) + 1;
 	length = (length > NUM_MAX_LEN) ? NUM_MAX_LEN : length;
 
 	Num *product = _numCreateWithLength(length);
