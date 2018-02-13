@@ -8,7 +8,6 @@
 
 #include "num.h"
 
-#include <assert.h>
 #include <ctype.h>
 #include <limits.h>
 #include <math.h>
@@ -39,6 +38,16 @@ struct num {
 
 static Num * _numCreateWithLength(const size_t length)
 {
+	/*
+	 *  Function _numCreateWithLength(l) -> n
+	 *  -----------------------------
+	 *  @param: l (const size_t)
+	 *  	Number of digits in Num
+	 *
+	 *  @return: n (Num *)
+	 *  	n is a Num with all 0s of length l
+	 */
+
 	Num *n = malloc(sizeof(*n) + length);
 
 	if (!n) {
@@ -185,8 +194,12 @@ Num * numAdd(const Num *x, const Num *y)
 
 	max_length = (x->length > y->length) ? x->length : y->length;
 
-	// TODO: Ensure max_length + 1 <= NUM_MAX_LEN
-	Num *sum = _numCreateWithLength(max_length + 1);
+	Num *sum;
+	if (max_length == NUM_MAX_LEN) {
+		sum = _numCreateWithLength(max_length);
+	} else {
+		sum = _numCreateWithLength(max_length + 1);
+	}
 
 	while (i < max_length || carry) {
 		tmp = numGetDigit(x, i) + numGetDigit(y, i) + carry;
@@ -200,11 +213,10 @@ Num * numAdd(const Num *x, const Num *y)
 
 		sum->digits[i++] = tmp;
 
-		if (i == max_length && carry) {
-			max_length++;
-		}
+		if (i == max_length && carry) { max_length++; }
 	}
 
+	// We've aleady incremented max_length if there was a carry
 	sum->length = max_length;
 
 	return sum;
@@ -263,9 +275,7 @@ Num * numMultiply(const Num *x, const Num *y)
 	 *	way to multiply numbers).
 	 */
 
-	if (!(x->length && y->length)) {
-		return _numCreateWithLength(0);
-	}
+	if (!(x->length && y->length)) { return _numCreateWithLength(0); }
 
 	size_t length = floorl(log10l(x->length) + log10l(y->length)) + 1;
 	length = (length > NUM_MAX_LEN) ? NUM_MAX_LEN : length;
@@ -274,7 +284,7 @@ Num * numMultiply(const Num *x, const Num *y)
 
 	for (size_t i = 0; i < (size_t)(y->length); i++) {
 		if (numGetDigit(y, i)) {
-			// Explicitly create & destory stucts to prevent mem leaks
+			// Explicitly create & destory stucts to prevent memory leaks
 			Num *s_mult = _scalarMultiply(x, numGetDigit(y, i), i);
 			Num *sum = numAdd(product, s_mult);
 			numDestroy(product);
@@ -299,7 +309,7 @@ void numPrint(const Num *n, FILE *f)
 
 	if (n->length) {
 		for (size_t i = 0; i < (size_t)n->length; i++) {
-			fprintf(f, "%d", numGetDigit(n, n->length - (i + 1)));
+			fprintf(f, "%d", _numGetDigit(n, n->length - (i + 1)));
 		}
 
 	} else {
