@@ -17,6 +17,7 @@
 
 #define NUM_MAX_LEN	(UINT_MAX)	// Maximum number of digits
 #define ASCII_OFFST	('0')		// Conversion from 'digit' to digit
+#define ERR_MEM_ALC (1)	// Can't allocate enough memory
 
 struct num {
 	/*
@@ -35,25 +36,26 @@ struct num {
 	uint8_t digits[];
 };
 
-static size_t _log(size_t length)
+static inline size_t _log(size_t length)
 {
 	/*
-	 *  Function _log(l) -> d
+	 *  Function _log(l) -> b
 	 *  -----------------------------
 	 *  @param: l ( size_t)
-	 *  	Number of digits in Num
+	 *  	Number of digits in Num.
 	 *
-	 *  @return: d (size_t)
-	 *  	Returns floor(log_2(l))
+	 *  @return: b (size_t)
+	 *  	Returns floor(log_10(l))
 	 */
 
-	size_t binary_logarithm = 0;
+	size_t common_logarithm = 0;
 	
-	while ((length >> binary_logarithm) > 1) {
-		binary_logarithm++;
+	// Return the floor of the log instead of the ceiling
+	while ((length >> common_logarithm) > 1) {
+		common_logarithm++;
 	}
 
-	return binary_logarithm;
+	return common_logarithm;
 }
 
 static Num * _numCreateWithLength(const size_t length)
@@ -112,7 +114,7 @@ Num * numCreate(const char *s)
 
 	if (!n) {
 		fprintf(stderr, "Unable to allocate memory for Num('%s').\n", s);
-		return NULL;
+		exit(ERR_MEM_ALC);
 	}
 
 	for (size_t j = start_position; j < length; j++) {
