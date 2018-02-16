@@ -14,10 +14,6 @@
 #define ERR_MEM_ALC	(2) // Unable to allocate memory for buffer
 #define ERR_NEG_VAL	(3) // n < 1
 
-static unsigned int n;
-static int a;
-static int b;
-
 static inline int modulo(long long x, unsigned int y)
 {
 	/*
@@ -39,7 +35,7 @@ static inline int modulo(long long x, unsigned int y)
 	return ((x % y) + y) % y;
 }
 
-int parse_input(void)
+int parse_input(unsigned int n, int a, int b)
 {
 	/*
 	 *  Function parse_input(void) -> status_code
@@ -96,6 +92,10 @@ int parse_input(void)
 
 int main(int argc, char** argv)
 {
+	unsigned int n;
+	int a;
+	int b;
+
 	if (argc != 4) { 
 		fprintf(stderr, "Usage: %s n a b\n", argv[0]);
 		return ERR_ARG_NUM; 
@@ -109,6 +109,6 @@ int main(int argc, char** argv)
 		a = atoi(argv[2]);
 		b = atoi(argv[3]);
 	
-		return parse_input();
+		return parse_input(n, a ,b);
 	}
 }
