@@ -38,10 +38,11 @@ static inline int modulo(long long x, unsigned int y)
 int parse_input(unsigned int n, int a, int b)
 {
 	/*
-	 *  Function parse_input(void) -> status_code
+	 *  Function parse_input(n, a, b) -> status_code
 	 *  -----------------------------
-	 *  @param: void
-	 *  	No arguments should be passed
+	 *  @param: n (int)
+	 *  @param: a (int)
+	 *  @param: b (int)
 	 *
 	 *  @return: status_code (int)
 	 *  	Return error code if failed, or 
