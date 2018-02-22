@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		24CD8DA9203CD9160087BA00 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 24CD8DA8203CD9160087BA00 /* main.c */; };
 		24CD8DB1203CD9310087BA00 /* deck.c in Sources */ = {isa = PBXBuildFile; fileRef = 24CD8DB0203CD9310087BA00 /* deck.c */; };
+		24CD8DB3203E65640087BA00 /* testDeck.c in Sources */ = {isa = PBXBuildFile; fileRef = 24CD8DB2203E65640087BA00 /* testDeck.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -28,6 +29,7 @@
 		24CD8DA8203CD9160087BA00 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		24CD8DAF203CD9310087BA00 /* deck.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = deck.h; sourceTree = "<group>"; };
 		24CD8DB0203CD9310087BA00 /* deck.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = deck.c; sourceTree = "<group>"; };
+		24CD8DB2203E65640087BA00 /* testDeck.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = testDeck.c; path = "/Users/jacksonpetty/Documents/School/CPSC-223/Assignment 4/Deck/Deck/testDeck.c"; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,6 +62,7 @@
 		24CD8DA7203CD9160087BA00 /* Deck */ = {
 			isa = PBXGroup;
 			children = (
+				24CD8DB2203E65640087BA00 /* testDeck.c */,
 				24CD8DA8203CD9160087BA00 /* main.c */,
 				24CD8DAF203CD9310087BA00 /* deck.h */,
 				24CD8DB0203CD9310087BA00 /* deck.c */,
@@ -124,6 +127,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				24CD8DB3203E65640087BA00 /* testDeck.c in Sources */,
 				24CD8DB1203CD9310087BA00 /* deck.c in Sources */,
 				24CD8DA9203CD9160087BA00 /* main.c in Sources */,
 			);

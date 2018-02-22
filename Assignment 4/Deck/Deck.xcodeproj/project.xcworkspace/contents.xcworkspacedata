@@ -2,6 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:/Users/jacksonpetty/Documents/School/CPSC-223/Assignment 4/Deck/Deck/testDeck.c">
+   </FileRef>
+   <FileRef
       location = "self:Deck.xcodeproj">
    </FileRef>
 </Workspace>
