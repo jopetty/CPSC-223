@@ -32,6 +32,7 @@
  	- data:		The Card stored in the node.
 */
 struct node {
+	// TODO: Make it a singly linked list
 	struct node * next;
 	struct node * previous;
 	Card data;
@@ -147,17 +148,38 @@ static Deck * _deckCreateEmptyDeck(void) {
 	}
 	
 	deck->length = 0;
+	deck->first = NULL;
+	deck->last = NULL;
 	
 	return deck;
 }
 
+/**
+ Attaches part of an old linked list to a new one, and then destroys the old list's
+ Deck * wrapper.
+ 
+ - Parameters:
+ 	- new:	The new deck.
+	 - old:	The old deck. The list contained is reassigned, the Deck * struct is `free()`d.
+ 
+ - Complexity:
+ Runs in O(1) (constant) time.
+*/
 static void inline _wireUp(Deck * new, Deck * old) {
-	new->last->next = old->first;
-	new->last->next->previous = new->last;
-	new->last = old->last;
-	new->length += old->length;
-	free(old);
-	old = NULL;
+	if (new->length) {
+		new->last->next = old->first;
+		new->last->next->previous = new->last;
+		new->last = old->last;
+		new->length += old->length;
+		free(old);
+		old = NULL;
+	} else {
+		new->first = old->first;
+		new->last = old->last;
+		new->length = old->length;
+		free(old);
+		old = NULL;
+	}
 }
 
 // MARK:- Public Methods
@@ -310,28 +332,20 @@ void deckSplit(Deck * deck, int n, Deck ** first_deck, Deck ** second_deck) {
 	Deck * lower_split = _deckCreateEmptyDeck();
 	
 	// TODO: Use _wireUp() here instead of extra code
+	// TODO: Fix memory leaks
 	
 	if (n >= deck->length) {
-//		_wireUp(upper_split, deck);
-		upper_split->first = deck->first;
-		upper_split->last = deck->last;
-		upper_split->length = deck->length;
+		_wireUp(upper_split, deck);
 	} else {
 		
 		for (size_t i = 0; i < n; i++) {
 			deckPutCard(upper_split, deckGetCard(deck));
 		}
-//		_wireUp(lower_split, deck);
-		lower_split->first = deck->first;
-		lower_split->last = deck->last;
-		lower_split->length = deck->length;
+		_wireUp(lower_split, deck);
 	}
 	
 	*first_deck = upper_split;
 	*second_deck = lower_split;
-	
-	free(deck);
-	deck = NULL;
 }
 
 Deck * deckShuffle(Deck * d1, Deck * d2) {
@@ -362,7 +376,7 @@ Deck * deckShuffle(Deck * d1, Deck * d2) {
 	return new_deck;
 }
 
-void deckPrint(const Deck * d, FILE * f) { // Can't handle printing empty decks
+void deckPrint(const Deck * d, FILE * f) {
 	struct node * n = d->first;
 	size_t count = d->length;
 	while (n) {
@@ -370,5 +384,4 @@ void deckPrint(const Deck * d, FILE * f) { // Can't handle printing empty decks
 		if (--count) { fprintf(f, " "); }
 		n = n->next;
 	}
-//	fprintf(f, "%c%c", n->data.rank, n->data.suit);
 }

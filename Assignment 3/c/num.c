@@ -168,12 +168,12 @@ static inline uint8_t _numGetDigit(const Num *n, size_t i)
 	}
 }
 
-int numGetDigit(const Num *n, int i)
+int numGetDigit(const Num * n, int i)
 {
 	/*
 	 *  Function numGetDigit(n, i) -> d
 	 *  -----------------------------
-	 *  @param: n (Num *)
+	 *  @param: n (const Num *)
 	 *  	A Num
 	 *  @param: i (int)
 	 *  	The digit number, in range [0, n->length - 1]
@@ -198,7 +198,7 @@ int numGetDigit(const Num *n, int i)
 	}
 }
 
-Num * numAdd(const Num *x, const Num *y)
+Num * numAdd(const Num * x, const Num * y)
 {
 	/*
 	 *  Function numAdd(x, y) -> n
