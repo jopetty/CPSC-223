@@ -31,7 +31,6 @@
  	- data:		The Card stored in the node.
 */
 struct node {
-	// TODO: Make it a singly linked list
 	struct node * next;
 	Card data;
 };
@@ -40,19 +39,13 @@ struct node {
 /**
  Implementation of a deck of cards as a linked list.
  
- Should be created either with `_deckCreateEmptyDeck()` when an uninitialized
- deck is needed, or with `deckCreate()` to create a full 52 card deck. `deckCreate()`
+ Should be created either with @p _deckCreateEmptyDeck() when an uninitialized
+ deck is needed, or with @p deckCreate() to create a full 52 card deck. @p deckCreate()
  is the only public way to create a deck. By default, the deck is ordered first by
  suit, then by rank.
  
- Deck is implemented as a doubly linked list to allow for O(1) insertion at the end
- and for O(1) deletion at the beginning. Being doubly linked also allows for destruction
- in O(n) time, rather than O(n!) time.
- 
- - Parameters:
- 	- length:	How many cards are in the deck. Should never be set externally.
- 	- first:	Pointer to the first node in the deck.
- 	- last:		Pointer to the last node in the deck.
+ Deck is implemented as a singly linked list to allow for O(1) insertion at the end
+ and for O(1) deletion at the beginning, as well as linear merging.
 */
 struct deck {
 	size_t length;
@@ -65,14 +58,13 @@ struct deck {
 /**
  Creates a new card of a given rank and suit.
  
- Because the struct is passed by value, we do not `malloc()` space for it, and so it never
- needs to be `free()`d.
+ Because the struct is passed by value, we do not @p malloc() space for it, and so it never
+ needs to be freed.
  
- - Parameters:
- 	- rank:	The rank of the card.
- 	- suit:	The suit of the card.
+ @param rank	The rank of the card.
+ @param suit	The suit of the card.
  
- - Returns: A new card with given rank and suit.
+ @return	A new card with the given rank and suit.
 */
 static inline Card _createCard(char rank, char suit) {
 	return (Card) { .rank = rank, .suit = suit };
@@ -81,9 +73,9 @@ static inline Card _createCard(char rank, char suit) {
 /**
  Creates a new node from a given card.
  
- - Parameter card:	Card to be placed into a node.
+ @param card	Card to be placed into a node.
  
- - Returns:	A node containing the card, with NULL sequence pointers.
+ @return	A pointer to the node containing the card, with NULL next pointer.
 */
 static struct node * _createNode(Card card) {
 	
@@ -103,9 +95,8 @@ static struct node * _createNode(Card card) {
 /**
  Adds a new node to the end of a deck.
  
- - Parameters:
- 	- deck:	Deck to which node will be added.
- 	- node:	Node to be placed on the bottom of the deck.
+ @param deck	A pointer to the deck to which node will be added.
+ @param	node	A pointer to the node to be placed on the bottom of the deck.
 */
 static void _addToEnd(Deck * deck, struct node * node) {
 	
@@ -113,25 +104,17 @@ static void _addToEnd(Deck * deck, struct node * node) {
 	assert(node);
 		
 	node->next = NULL;
-	
-	if (deck->length++) {
-		// Add card to non-empty deck
-		deck->last->next = node;
-		deck->last = node;
-	} else {
-		// Deck is empty, we're adding the first card
-		deck->first = node;
-		deck->last = node;
-	}
+	(deck->length++) ? (deck->last->next = node) : (deck->first = node);
+	deck->last = node;
 }
 
 /**
  Creates a new, empty deck of length 0.
  
- Function exists as a helper function to ensure that memory was allocated correctly.
- Called from the primary public-facing `createDeck()` and from `deckSplit()`.
+ Function exists to ensure that memory was allocated correctly.
+ Called from the primary public-facing @p createDeck() @p and from @p deckSplit().
  
- - Returns: A pointer to an empty deck.
+ @return A pointer to an empty deck.
 */
 static Deck * _deckCreateEmptyDeck(void) {
 	
@@ -153,27 +136,20 @@ static Deck * _deckCreateEmptyDeck(void) {
  Attaches part of an old linked list to a new one, and then destroys the old list's
  Deck * wrapper.
  
- - Parameters:
- 	- new:	The new deck.
-	- old:	The old deck. The list contained is reassigned, the Deck * struct is `free()`d.
+ @param new	The new deck.
+ @param old	The old deck.
  
- - Complexity:
+ @b Complexity:
  Runs in O(1) (constant) time.
 */
 static void inline _wireUp(Deck * new, Deck * old) {
-	if (new->length) {
-		new->last->next = old->first;
-		new->last = old->last;
-		new->length += old->length;
-		free(old);
-		old = NULL;
-	} else {
-		new->first = old->first;
-		new->last = old->last;
-		new->length = old->length;
-		free(old);
-		old = NULL;
-	}
+	(new->length) ? (new->last->next = old->first) : (new->first = old->first);
+	new->last = old->last;
+	new->length += old->length;
+	
+	// We don't call deckDestroy() since we only want to delete Deck wrapper, not the nodes
+	free(old);
+	old = NULL;
 }
 
 // MARK:- Public Methods
@@ -181,10 +157,10 @@ static void inline _wireUp(Deck * new, Deck * old) {
 /**
  Creates a new, full deck of 52 cards in order by suit and then rank.
  
- - Returns: A pointer to a full, ordered deck.
+ @return	A pointer to a full, ordered deck.
  
- - Complexity:
- This runs in O(1) (constant) time, since all decks have the same number of cards
+ @b Complexity:
+ Runs in O(1) (constant) time, since all decks have the same number of cards
  when initialized.
 */
 Deck * deckCreate(void) {
@@ -192,11 +168,9 @@ Deck * deckCreate(void) {
 	Deck * deck = _deckCreateEmptyDeck();
 	
 	for (size_t i = 0; i < DECK_LENGTH; i++) {
-		
 		Card card = _createCard(RANKS[i % strlen(RANKS)],
 								SUITS[i * strlen(SUITS) / DECK_LENGTH]);
 		struct node * new_node = _createNode(card);
-		
 		_addToEnd(deck, new_node);
 	}
 	
@@ -204,14 +178,14 @@ Deck * deckCreate(void) {
 }
 
 /**
- Destoys a deck by `free()`ing all space which was allocated for it.
+ Destoys a deck by freeing all space which was allocated.
  
  All nodes which are a part of the deck will be destroyed and set to NULL before
  the deck itself is destroyed and set to NULL. Deck is destroyed from front to back.
  
- - Parameter deck:	Pointer to the deck to be destroyed
+ @param deck	Pointer to the deck to be destroyed.
  
- - Complexity:
+ @b Complexity:
  Runs in O(n) (linear) time, where n is the length of the deck.
 */
 void deckDestroy(Deck * deck) {
@@ -240,13 +214,13 @@ void deckDestroy(Deck * deck) {
 /**
  Returns whether or not the deck is empty.
  
- - Parameter deck:	A pointer to a deck.
+ @param deck	A pointer to a deck.
  
- - Returns:	Length of the deck, cast to an integer.
+ @return	Length of the deck, cast to an integer.
  Since all values not equal to zero are True, the length can be used as a boolean
  to determine if the deck is empty or not.
  
- - Complexity:
+ @b Complexity:
  Runs in O(1) (constant) time.
 */
 inline int deckNotEmpty(const Deck * deck) {
@@ -256,13 +230,13 @@ inline int deckNotEmpty(const Deck * deck) {
 /**
  Pops a card off the top of the deck.
  
- - Paramter deck:	A pointer to a deck.
+ @param deck	A pointer to a deck.
  
- - Retuns: The first card on the top of the deck.
+ @return	The first card on the top of the deck.
  In the process, the node storing this card is removed from the deck and destroyed,
  and the deck is updated to reflect the new length and first node.
  
- - Complexity:
+ @b Complexity:
  Runs in O(1) (constant) time.
 */
 Card deckGetCard(Deck * deck) {
@@ -273,11 +247,10 @@ Card deckGetCard(Deck * deck) {
 	
 	// Prune Deck
 	struct node * node = deck->first;
-	if (deck->first->next) {
-		deck->first = deck->first->next;
-	}
+	if (deck->first->next) { deck->first = deck->first->next; }
 	deck->length--;
 	free(node);
+	node = NULL;
 
 	return card;
 }
@@ -287,11 +260,10 @@ Card deckGetCard(Deck * deck) {
  
  Creates a new node wrapper around the card, then places that card into the deck.
  
- - Parameters:
- 	- deck:	Deck to which the card is added.
- 	- card:	Card added to the deck.
+ @param deck	Deck to which the card is added.
+ @param card	Card added to the deck.
  
- - Complexity:
+ @b Complexity:
  Runs in O(1) (constant) time.
 */
 inline void deckPutCard(Deck * deck, Card card) {
@@ -304,17 +276,15 @@ inline void deckPutCard(Deck * deck, Card card) {
  
  If the original deck contains fewer than n cards, all will be put into first_deck.
  Insted of copying cards into a new deck, we simply wire our new decks up to the
- appropriate parts of the linked list, and then `free()` the Deck * wrapper around
- the old decks.
+ appropriate parts of the linked list, and then free the  wrapper around the old decks.
  
- - Parameters:
- 	- deck:			Original deck. Is destroyed after split.
- 	- n:			The first n cards are put into first new deck.
- 	- first_deck:	Is created from the first n cards of the original deck.
- 	- second_deck:	Is created from the remainder of the original deck.
+ @param deck		Original deck. Is destroyed after split.
+ @param n			Number of cards put into first deck.
+ @param first_deck	Created from the first n cards of the original deck.
+ @param second_deck	Created from the remainder of the original deck.
  
- - Complexity:
- If n >= deck->length, then it runs in O(1) (constant) time. Otherwise, it runs in
+ @b Complexity:
+ If n >= deck length, then it runs in O(1) (constant) time. Otherwise, it runs in
  O(n) (linear in given n) time.
 */
 void deckSplit(Deck * deck, int n, Deck ** first_deck, Deck ** second_deck) {
@@ -325,7 +295,6 @@ void deckSplit(Deck * deck, int n, Deck ** first_deck, Deck ** second_deck) {
 	if (n >= deck->length) {
 		_wireUp(upper_split, deck);
 	} else {
-		
 		for (size_t i = 0; i < n; i++) {
 			deckPutCard(upper_split, deckGetCard(deck));
 		}
@@ -342,13 +311,12 @@ void deckSplit(Deck * deck, int n, Deck ** first_deck, Deck ** second_deck) {
  Both decks passed as parameters will be destroyed, and a new deck containing
  the shuffled cards will be returned to the caller.
  
- - Parameters:
- 	- left_deck: A pointer to a deck of cards.
-	- right_deck: A pointer to a deck of cards.
+ @param left_deck	A pointer to a deck of cards.
+ @param right_deck	A pointer to a deck of cards.
  
- - Returns: A pointer to a shuffled deck.
+ @return	A pointer to a shuffled deck.
  
- - Complexity:
+ @b Complexity:
  Runs in O(n) (linear) time, where n is the length of the shorter deck.
 */
 Deck * deckShuffle(Deck * left_deck, Deck * right_deck) {
@@ -379,11 +347,10 @@ Deck * deckShuffle(Deck * left_deck, Deck * right_deck) {
 /**
  Prints out all cards in a deck as a sequence of ranks and suits: AS TC ...
  
- - Parameters:
- 	- deck: A pointer to a constant deck.
- 	- file: File to which deck will be printed.
+ @param deck	A pointer to a constant deck.
+ @param file	File to which deck will be printed.
  
- - Complexity:
+ @b Complexity:
  Runs in O(n) (constant) time, where n is the length of the deck.
 */
 void deckPrint(const Deck * deck, FILE * file) {
