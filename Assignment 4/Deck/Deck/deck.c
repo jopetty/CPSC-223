@@ -22,18 +22,14 @@
 /**
  Node in the deck.
  
- Should be createed with the `_createNode(Card c)` function.
- When destroyed, only `next` and `previous` are to be `free()`'d.
- 
- - Parameters:
- 	- next:		Pointer to the next node in the list.
- 	- previous:	Pointer to the previous node in the list.
- 	- data:		The Card stored in the node.
+ Should be createed with the @p _createNode(Card c) function.
+ When destroyed, only @p next is to be freed, since Cards are
+ not dynamically assigned memory.
 */
-struct node {
+typedef struct node {
 	struct node * next;
 	Card data;
-};
+} Node;
 
 
 /**
@@ -49,8 +45,8 @@ struct node {
 */
 struct deck {
 	size_t length;
-	struct node * first;
-	struct node * last;
+	Node * first;
+	Node * last;
 };
 
 // MARK:- Static Methods
@@ -77,19 +73,19 @@ static inline Card _createCard(char rank, char suit) {
  
  @return	A pointer to the node containing the card, with NULL next pointer.
 */
-static struct node * _createNode(Card card) {
+static Node * _createNode(Card card) {
 	
-	struct node * n = malloc(sizeof(*n));
+	Node * new_node = malloc(sizeof(*new_node));
 	
-	if (!n) {
+	if (!new_node) {
 		fprintf(stderr, "Could not allocate memory for a new node.");
 		exit(NDE_ALC_ERR);
 	}
 	
-	n->next = NULL;
-	n->data = card;
+	new_node->next = NULL;
+	new_node->data = card;
 	
-	return n;
+	return new_node;
 }
 
 /**
@@ -98,7 +94,7 @@ static struct node * _createNode(Card card) {
  @param deck	A pointer to the deck to which node will be added.
  @param	node	A pointer to the node to be placed on the bottom of the deck.
 */
-static void _addToEnd(Deck * deck, struct node * node) {
+static void _addToEnd(Deck * deck, Node * node) {
 	
 	assert(deck);
 	assert(node);
@@ -192,8 +188,8 @@ void deckDestroy(Deck * deck) {
 	
 	if (deck) {
 		if (deck->length) {
-			struct node * temp_node;
-			struct node * curr_node = deck->first;
+			Node * temp_node;
+			Node * curr_node = deck->first;
 			while (deck->length--) {
 				if (curr_node->next) {
 					temp_node = curr_node->next;
@@ -216,9 +212,9 @@ void deckDestroy(Deck * deck) {
  
  @param deck	A pointer to a deck.
  
- @return	Length of the deck, cast to an integer.
- Since all values not equal to zero are True, the length can be used as a boolean
- to determine if the deck is empty or not.
+ @return	Length of the deck, cast to an integer. Since all values
+ not equal to zero are True, the length can be used as a boolean to
+ determine if the deck is empty or not.
  
  @b Complexity:
  Runs in O(1) (constant) time.
@@ -246,7 +242,7 @@ Card deckGetCard(Deck * deck) {
 	Card card = deck->first->data;
 	
 	// Prune Deck
-	struct node * node = deck->first;
+	Node * node = deck->first;
 	if (deck->first->next) { deck->first = deck->first->next; }
 	deck->length--;
 	free(node);
@@ -267,7 +263,7 @@ Card deckGetCard(Deck * deck) {
  Runs in O(1) (constant) time.
 */
 inline void deckPutCard(Deck * deck, Card card) {
-	struct node * new_node = _createNode(card);
+	Node * new_node = _createNode(card);
 	_addToEnd(deck, new_node);
 }
 
@@ -322,7 +318,6 @@ void deckSplit(Deck * deck, int n, Deck ** first_deck, Deck ** second_deck) {
 Deck * deckShuffle(Deck * left_deck, Deck * right_deck) {
 	
 	Deck * new_deck = _deckCreateEmptyDeck();
-	
 	size_t iter_length = (left_deck->length < right_deck->length) ? left_deck->length : right_deck->length;
 	
 	for (size_t i = 0; i < iter_length; i++) {
@@ -330,13 +325,14 @@ Deck * deckShuffle(Deck * left_deck, Deck * right_deck) {
 		deckPutCard(new_deck, deckGetCard(right_deck));
 	}
 	
-	if (left_deck->length) { // left > right
+	// Wire any remaining cards up to the new deck
+	if (left_deck->length > right_deck->length) {
 		deckDestroy(right_deck);
 		_wireUp(new_deck, left_deck);
-	} else if (right_deck->length) { // right > left
+	} else if (right_deck->length > left_deck->length) {
 		deckDestroy(left_deck);
 		_wireUp(new_deck, right_deck);
-	} else { // Decks were equal length to begin with
+	} else {
 		deckDestroy(left_deck);
 		deckDestroy(right_deck);
 	}
@@ -354,11 +350,11 @@ Deck * deckShuffle(Deck * left_deck, Deck * right_deck) {
  Runs in O(n) (constant) time, where n is the length of the deck.
 */
 void deckPrint(const Deck * deck, FILE * file) {
-	struct node * node = deck->first;
+	Node * curr_node = deck->first;
 	size_t count = deck->length;
-	while (node) {
-		fprintf(file, "%c%c", node->data.rank, node->data.suit);
+	while (curr_node) {
+		fprintf(file, "%c%c", curr_node->data.rank, curr_node->data.suit);
 		if (--count) { fprintf(file, " "); }
-		node = node->next;
+		curr_node = curr_node->next;
 	}
 }
