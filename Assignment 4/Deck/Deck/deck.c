@@ -147,9 +147,9 @@ static Deck * _deckCreateEmptyDeck(void) {
 		exit(DEC_ALC_ERR);
 	}
 	
-	deck->length = 0;
 	deck->first = NULL;
 	deck->last = NULL;
+	deck->length = 0;
 	
 	return deck;
 }
@@ -200,7 +200,7 @@ Deck * deckCreate(void) {
 	for (size_t i = 0; i < DECK_LENGTH; i++) {
 		
 		Card card = _createCard(RANKS[i % strlen(RANKS)],
-							 SUITS[i / (DECK_LENGTH / strlen(SUITS))]);
+								SUITS[i / (DECK_LENGTH / strlen(SUITS))]);
 		struct node * new_node = _createNode(card);
 		
 		_addToEnd(deck, new_node);
@@ -278,15 +278,15 @@ Card deckGetCard(Deck * deck) {
 	Card card = deck->first->data;
 	
 	// Prune Deck
-	struct node * node = deck->first; // Get reference to the node we're destroying
+	struct node * node = deck->first;
 	if (deck->first->next) {
-		deck->first = deck->first->next; // Update deck->first
+		deck->first = deck->first->next;
 	}
-	if (deck->first->previous) {
-		deck->first->previous = NULL;  // Let deck->first know its first
+	if (deck->first->previous) { // Just set it, dont check?
+		deck->first->previous = NULL;
 	}
-	deck->length--; // Decrement the length
-	free(node); // Destroy the old first node
+	deck->length--;
+	free(node);
 
 	return card;
 }
@@ -331,9 +331,6 @@ void deckSplit(Deck * deck, int n, Deck ** first_deck, Deck ** second_deck) {
 	Deck * upper_split = _deckCreateEmptyDeck();
 	Deck * lower_split = _deckCreateEmptyDeck();
 	
-	// TODO: Use _wireUp() here instead of extra code
-	// TODO: Fix memory leaks
-	
 	if (n >= deck->length) {
 		_wireUp(upper_split, deck);
 	} else {
@@ -348,40 +345,59 @@ void deckSplit(Deck * deck, int n, Deck ** first_deck, Deck ** second_deck) {
 	*second_deck = lower_split;
 }
 
-Deck * deckShuffle(Deck * d1, Deck * d2) {
+/**
+ Shuffles two decks together, alternating cards between them.
+ 
+ Both decks passed as parameters will be destroyed, and a new deck containing
+ the shuffled cards will be returned to the caller.
+ 
+ - Parameters:
+ 	- left_deck: A pointer to a deck of cards.
+	- right_deck: A pointer to a deck of cards.
+ 
+ - Returns: A pointer to a shuffled deck.
+ 
+ - Complexity:
+ Runs in O(n) (linear) time, where n is the length of the shorter deck.
+*/
+Deck * deckShuffle(Deck * left_deck, Deck * right_deck) {
 
 	Deck * new_deck = _deckCreateEmptyDeck();
 	
-	// Use the same trick as with splitting.
-	// Walk through both the short and long decks, pop the cards into a new deck.
-	// When we reach the end of the short deck, wire the new_deck->last up to the
-	// remainder of the longer deck, update the length of new_deck, and kill the
-	// Deck * wrappers around d1 and d2.
-	
-	size_t iter_length = (d1->length < d2->length) ? d1->length : d2->length;
+	size_t iter_length = (left_deck->length < right_deck->length) ? left_deck->length : right_deck->length;
 	
 	for (size_t i = 0; i < iter_length; i++) {
-		deckPutCard(new_deck, deckGetCard(d1));
-		deckPutCard(new_deck, deckGetCard(d2));
+		deckPutCard(new_deck, deckGetCard(left_deck));
+		deckPutCard(new_deck, deckGetCard(right_deck));
 	}
 	
-	if (d1->length) {
-		deckDestroy(d2);
-		_wireUp(new_deck, d1);
+	if (left_deck->length) {
+		deckDestroy(right_deck);
+		_wireUp(new_deck, left_deck);
 	} else {
-		deckDestroy(d1);
-		_wireUp(new_deck, d2);
+		deckDestroy(left_deck);
+		_wireUp(new_deck, right_deck);
 	}
 	
 	return new_deck;
 }
 
-void deckPrint(const Deck * d, FILE * f) {
-	struct node * n = d->first;
-	size_t count = d->length;
-	while (n) {
-		fprintf(f, "%c%c", n->data.rank, n->data.suit);
-		if (--count) { fprintf(f, " "); }
-		n = n->next;
+/**
+ Prints out all cards in a deck as a sequence of ranks and suits: AS TC ...
+ 
+ - Parameters:
+ 	- deck: A pointer to a constant deck.
+ 	- file: File to which deck will be printed.
+ 
+ -Complexity:
+ Runs in O(n) (constant) time, where n is the length of the deck.
+*/
+void deckPrint(const Deck * deck, FILE * file) {
+	struct node * node = deck->first;
+	size_t count = deck->length;
+	while (node) {
+		fprintf(file, "%c%c", node->data.rank, node->data.suit);
+		if (--count) { fprintf(file, " "); }
+		node = node->next;
 	}
 }
