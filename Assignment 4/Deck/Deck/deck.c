@@ -13,9 +13,9 @@
 #include <string.h>
 
 #define DECK_LENGTH (52) // How long is a standard deck
-#define ERR_DEC_ALC (1)  // Return if unable to allocate memory for new deck
-#define ERR_CRD_ALC (2)  // Return if unable to allocate memory for new card
-#define ERR_NDE_ALC (3)  // Return if unable to allocate memory for new node
+#define ERR_DEC_ALC (1)  // Status if unable to allocate memory for new deck
+#define ERR_NDE_ALC (2)  // Status if unable to allocate memory for new node
+#define ERR_BAD_FLE (3)  // Status if attempted a write to an invalid file
 
 // MARK:- Data Structures
 
@@ -81,8 +81,13 @@ static Node * _createNode(Card card) {
 */
 static void _addToEnd(Deck * deck, Node * node) {
 	
-	assert(deck);
-	assert(node);
+	if (!deck) {
+		fprintf(stderr, "Attempted to add node to a NULL deck.");
+		exit(ERR_DEC_ALC);
+	} else if (!node) {
+		fprintf(stderr, "Attempted to add a NULL node to a deck.");
+		exit(ERR_NDE_ALC);
+	}
 		
 	node->next = NULL;
 	(deck->length++) ? (deck->last->next = node) : (deck->first = node);
@@ -125,11 +130,16 @@ static Deck * _deckCreateEmptyDeck(void) {
 */
 static void inline _wireUp(Deck * new, Deck * old) {
 	
+	if (!(new && old)) {
+		fprintf(stderr, "Attempted to connect a NULL deck.");
+		exit(ERR_DEC_ALC);
+	}
+	
 	(new->length) ? (new->last->next = old->first) : (new->first = old->first);
 	new->last = old->last;
 	new->length += old->length;
 	
-	// We don't call deckDestroy() since we only want to delete Deck wrapper, not the nodes
+	// Only delete Deck * wrapper, not the nodes
 	free(old);
 	old = NULL;
 }
@@ -208,6 +218,7 @@ void deckDestroy(Deck * deck) {
  Runs in O(1) (constant) time.
 */
 inline int deckNotEmpty(const Deck * deck) {
+	assert(deck);
 	return (int)deck->length;
 }
 
@@ -251,6 +262,7 @@ Card deckGetCard(Deck * deck) {
  Runs in O(1) (constant) time.
 */
 inline void deckPutCard(Deck * deck, Card card) {
+	assert(deck);
 	Node * new_node = _createNode(card);
 	_addToEnd(deck, new_node);
 }
@@ -272,10 +284,15 @@ inline void deckPutCard(Deck * deck, Card card) {
  O(n) (linear in given n) time.
 */
 void deckSplit(Deck * deck, int n, Deck ** first_deck, Deck ** second_deck) {
+	
+	if (!deck) {
+		fprintf(stderr, "Attempted to split a NULL deck.");
+		exit(ERR_DEC_ALC);
+	}
 
 	Deck * upper_split = _deckCreateEmptyDeck();
 	Deck * lower_split = _deckCreateEmptyDeck();
-	
+
 	if (n >= deck->length) {
 		_wireUp(upper_split, deck);
 	} else {
@@ -284,7 +301,7 @@ void deckSplit(Deck * deck, int n, Deck ** first_deck, Deck ** second_deck) {
 		}
 		_wireUp(lower_split, deck);
 	}
-	
+
 	*first_deck = upper_split;
 	*second_deck = lower_split;
 }
@@ -304,6 +321,11 @@ void deckSplit(Deck * deck, int n, Deck ** first_deck, Deck ** second_deck) {
  Runs in O(n) (linear) time, where n is the length of the shorter deck.
 */
 Deck * deckShuffle(Deck * left_deck, Deck * right_deck) {
+	
+	if (!(left_deck && right_deck)) {
+		fprintf(stderr, "Attempted to shuffle a NULL deck.");
+		exit(ERR_DEC_ALC);
+	}
 	
 	Deck * new_deck = _deckCreateEmptyDeck();
 	size_t iter_length = (left_deck->length < right_deck->length) ? left_deck->length : right_deck->length;
@@ -338,6 +360,14 @@ Deck * deckShuffle(Deck * left_deck, Deck * right_deck) {
  Runs in O(n) (linear) time, where n is the length of the deck.
 */
 void deckPrint(const Deck * deck, FILE * file) {
+	
+	if (!deck) {
+		fprintf(stderr, "Attempted to print a NULL deck.");
+		exit(ERR_DEC_ALC);
+	} else if (!file) {
+		fprintf(stderr, "Attempted to write to an invalid file.");
+		exit(ERR_BAD_FLE);
+	}
 	
 	Node * curr_node = deck->first;
 	size_t count = deck->length;
