@@ -282,9 +282,7 @@ Card deckGetCard(Deck * deck) {
 	if (deck->first->next) {
 		deck->first = deck->first->next;
 	}
-	if (deck->first->previous) { // Just set it, dont check?
-		deck->first->previous = NULL;
-	}
+	deck->first->previous = NULL;
 	deck->length--;
 	free(node);
 
@@ -361,7 +359,7 @@ void deckSplit(Deck * deck, int n, Deck ** first_deck, Deck ** second_deck) {
  Runs in O(n) (linear) time, where n is the length of the shorter deck.
 */
 Deck * deckShuffle(Deck * left_deck, Deck * right_deck) {
-
+	
 	Deck * new_deck = _deckCreateEmptyDeck();
 	
 	size_t iter_length = (left_deck->length < right_deck->length) ? left_deck->length : right_deck->length;
@@ -371,12 +369,15 @@ Deck * deckShuffle(Deck * left_deck, Deck * right_deck) {
 		deckPutCard(new_deck, deckGetCard(right_deck));
 	}
 	
-	if (left_deck->length) {
+	if (left_deck->length) { // left > right
 		deckDestroy(right_deck);
 		_wireUp(new_deck, left_deck);
-	} else {
+	} else if (right_deck->length) { // right > left
 		deckDestroy(left_deck);
 		_wireUp(new_deck, right_deck);
+	} else { // Decks were equal length to begin with
+		deckDestroy(left_deck);
+		deckDestroy(right_deck);
 	}
 	
 	return new_deck;
