@@ -13,9 +13,9 @@
 #include <string.h>
 
 #define DECK_LENGTH (52) // How long is a standard deck
-#define DEC_ALC_ERR (1)  // Return if unable to allocate memory for new deck
-#define CRD_ALC_ERR (2)  // Return if unable to allocate memory for new card
-#define NDE_ALC_ERR (3)  // Return if unable to allocate memory for new node
+#define ERR_DEC_ALC (1)  // Return if unable to allocate memory for new deck
+#define ERR_CRD_ALC (2)  // Return if unable to allocate memory for new card
+#define ERR_NDE_ALC (3)  // Return if unable to allocate memory for new node
 
 // MARK:- Data Structures
 
@@ -54,8 +54,8 @@ struct deck {
 /**
  Creates a new card of a given rank and suit.
  
- Because the struct is passed by value, we do not @p malloc() space for it, and so it never
- needs to be freed.
+ Because the struct is passed by value, we do not @p malloc() space for it,
+ and so it never needs to be freed.
  
  @param rank	The rank of the card.
  @param suit	The suit of the card.
@@ -79,7 +79,7 @@ static Node * _createNode(Card card) {
 	
 	if (!new_node) {
 		fprintf(stderr, "Could not allocate memory for a new node.");
-		exit(NDE_ALC_ERR);
+		exit(ERR_NDE_ALC);
 	}
 	
 	new_node->next = NULL;
@@ -118,7 +118,7 @@ static Deck * _deckCreateEmptyDeck(void) {
 	
 	if (!deck) {
 		fprintf(stderr, "Could not allocate memory for a new deck.");
-		exit(DEC_ALC_ERR);
+		exit(ERR_DEC_ALC);
 	}
 	
 	deck->first = NULL;
@@ -139,6 +139,7 @@ static Deck * _deckCreateEmptyDeck(void) {
  Runs in O(1) (constant) time.
 */
 static void inline _wireUp(Deck * new, Deck * old) {
+	
 	(new->length) ? (new->last->next = old->first) : (new->first = old->first);
 	new->last = old->last;
 	new->length += old->length;
@@ -347,11 +348,13 @@ Deck * deckShuffle(Deck * left_deck, Deck * right_deck) {
  @param file	File to which deck will be printed.
  
  @b Complexity:
- Runs in O(n) (constant) time, where n is the length of the deck.
+ Runs in O(n) (linear) time, where n is the length of the deck.
 */
 void deckPrint(const Deck * deck, FILE * file) {
+	
 	Node * curr_node = deck->first;
 	size_t count = deck->length;
+	
 	while (curr_node) {
 		fprintf(file, "%c%c", curr_node->data.rank, curr_node->data.suit);
 		if (--count) { fprintf(file, " "); }
