@@ -12,11 +12,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define DECK_LENGTH	(52) // How long is a standard deck
-
-#define DEC_ALC_ERR	(1) // Return if unable to allocate memory for new deck
-#define CRD_ALC_ERR	(2) // Return if unable to allocate memory for new card
-#define NDE_ALC_ERR (3) // Return if unable to allocate memory for new node
+#define DECK_LENGTH (52) // How long is a standard deck
+#define DEC_ALC_ERR (1)  // Return if unable to allocate memory for new deck
+#define CRD_ALC_ERR (2)  // Return if unable to allocate memory for new card
+#define NDE_ALC_ERR (3)  // Return if unable to allocate memory for new node
 
 // MARK:- Data Structures
 
@@ -34,7 +33,6 @@
 struct node {
 	// TODO: Make it a singly linked list
 	struct node * next;
-	struct node * previous;
 	Card data;
 };
 
@@ -97,7 +95,6 @@ static struct node * _createNode(Card card) {
 	}
 	
 	n->next = NULL;
-	n->previous = NULL;
 	n->data = card;
 	
 	return n;
@@ -119,12 +116,10 @@ static void _addToEnd(Deck * deck, struct node * node) {
 	
 	if (deck->length++) {
 		// Add card to non-empty deck
-		node->previous = deck->last;
 		deck->last->next = node;
 		deck->last = node;
 	} else {
 		// Deck is empty, we're adding the first card
-		node->previous = NULL;
 		deck->first = node;
 		deck->last = node;
 	}
@@ -160,7 +155,7 @@ static Deck * _deckCreateEmptyDeck(void) {
  
  - Parameters:
  	- new:	The new deck.
-	 - old:	The old deck. The list contained is reassigned, the Deck * struct is `free()`d.
+	- old:	The old deck. The list contained is reassigned, the Deck * struct is `free()`d.
  
  - Complexity:
  Runs in O(1) (constant) time.
@@ -168,7 +163,6 @@ static Deck * _deckCreateEmptyDeck(void) {
 static void inline _wireUp(Deck * new, Deck * old) {
 	if (new->length) {
 		new->last->next = old->first;
-		new->last->next->previous = new->last;
 		new->last = old->last;
 		new->length += old->length;
 		free(old);
@@ -200,7 +194,7 @@ Deck * deckCreate(void) {
 	for (size_t i = 0; i < DECK_LENGTH; i++) {
 		
 		Card card = _createCard(RANKS[i % strlen(RANKS)],
-								SUITS[i / (DECK_LENGTH / strlen(SUITS))]);
+								SUITS[i * strlen(SUITS) / DECK_LENGTH]);
 		struct node * new_node = _createNode(card);
 		
 		_addToEnd(deck, new_node);
@@ -224,16 +218,16 @@ void deckDestroy(Deck * deck) {
 	
 	if (deck) {
 		if (deck->length) {
-			struct node * tmp = deck->first;
-			
+			struct node * temp_node;
+			struct node * curr_node = deck->first;
 			while (deck->length--) {
-				if (tmp->next) {
-					tmp = tmp->next;
-					free(tmp->previous);
-					tmp->previous = NULL;
+				if (curr_node->next) {
+					temp_node = curr_node->next;
+					free(curr_node);
+					curr_node = temp_node;
 				} else {
-					free(tmp);
-					tmp = NULL;
+					free(curr_node);
+					curr_node = NULL;
 				}
 			}
 		}
@@ -282,7 +276,6 @@ Card deckGetCard(Deck * deck) {
 	if (deck->first->next) {
 		deck->first = deck->first->next;
 	}
-	deck->first->previous = NULL;
 	deck->length--;
 	free(node);
 
@@ -390,7 +383,7 @@ Deck * deckShuffle(Deck * left_deck, Deck * right_deck) {
  	- deck: A pointer to a constant deck.
  	- file: File to which deck will be printed.
  
- -Complexity:
+ - Complexity:
  Runs in O(n) (constant) time, where n is the length of the deck.
 */
 void deckPrint(const Deck * deck, FILE * file) {
