@@ -52,21 +52,6 @@ struct deck {
 // MARK:- Static Methods
 
 /**
- Creates a new card of a given rank and suit.
- 
- Because the struct is passed by value, we do not @p malloc() space for it,
- and so it never needs to be freed.
- 
- @param rank	The rank of the card.
- @param suit	The suit of the card.
- 
- @return	A new card with the given rank and suit.
-*/
-static inline Card _createCard(char rank, char suit) {
-	return (Card) { .rank = rank, .suit = suit };
-}
-
-/**
  Creates a new node from a given card.
  
  @param card	Card to be placed into a node.
@@ -165,8 +150,10 @@ Deck * deckCreate(void) {
 	Deck * deck = _deckCreateEmptyDeck();
 	
 	for (size_t i = 0; i < DECK_LENGTH; i++) {
-		Card card = _createCard(RANKS[i % strlen(RANKS)],
-								SUITS[i * strlen(SUITS) / DECK_LENGTH]);
+		Card card = (Card) {
+			.rank = RANKS[i % strlen(RANKS)],
+			.suit = SUITS[i * strlen(SUITS) / DECK_LENGTH]
+		};
 		struct node * new_node = _createNode(card);
 		_addToEnd(deck, new_node);
 	}
