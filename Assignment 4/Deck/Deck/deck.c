@@ -184,25 +184,28 @@ Deck * deckCreate(void) {
 */
 void deckDestroy(Deck * deck) {
 	
-	if (deck) {
-		if (deck->length) {
-			Node * temp_node;
-			Node * curr_node = deck->first;
-			while (deck->length--) {
-				if (curr_node->next) {
-					temp_node = curr_node->next;
-					free(curr_node);
-					curr_node = temp_node;
-				} else {
-					free(curr_node);
-					curr_node = NULL;
-				}
+	if (!deck) {
+		fprintf(stderr, "Warning: Attempted to destroy a NULL deck.");
+		return;
+	}
+	
+	if (deck->length) {
+		Node * temp_node;
+		Node * curr_node = deck->first;
+		while (deck->length--) {
+			if (curr_node->next) {
+				temp_node = curr_node->next;
+				free(curr_node);
+				curr_node = temp_node;
+			} else {
+				free(curr_node);
+				curr_node = NULL;
 			}
 		}
+	}
 	
 	free(deck);
 	deck = NULL;
-	}
 }
 
 /**
@@ -218,7 +221,10 @@ void deckDestroy(Deck * deck) {
  Runs in O(1) (constant) time.
 */
 inline int deckNotEmpty(const Deck * deck) {
-	assert(deck);
+	if (!deck) {
+		fprintf(stderr, "Attempted to dereference a NULL deck.");
+		exit(ERR_DEC_ALC);
+	}
 	return (int)deck->length;
 }
 
@@ -236,7 +242,10 @@ inline int deckNotEmpty(const Deck * deck) {
 */
 Card deckGetCard(Deck * deck) {
 	
-	assert(deckNotEmpty(deck));
+	if (!deckNotEmpty(deck)) {
+		fprintf(stderr, "Attempted to draw card from an empty deck.");
+		exit(ERR_DEC_ALC);
+	}
 	
 	Card card = deck->first->data;
 	
@@ -262,7 +271,10 @@ Card deckGetCard(Deck * deck) {
  Runs in O(1) (constant) time.
 */
 inline void deckPutCard(Deck * deck, Card card) {
-	assert(deck);
+	if (!deck) {
+		fprintf(stderr, "Attempted to place card in a NULL deck.");
+		exit(ERR_DEC_ALC);
+	}
 	Node * new_node = _createNode(card);
 	_addToEnd(deck, new_node);
 }
