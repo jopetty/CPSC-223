@@ -44,15 +44,96 @@ int main(int argc, const char * argv[]) {
 //	deckDestroy(n_deck);
 //	deckDestroy(d_deck);
 	
-	// Implement bigDeck.in (small version)
-	Deck * c1 = deckCreate();
-	Deck * c2 = deckCreate();
-
-	Deck * d3 = deckShuffle(c1, c2);
-
-	deckPrint(d3, stdout);
-
-	deckDestroy(d3);
+//	// Implement bigDeck.in (small version)
+//	Deck * c1 = deckCreate();
+//	Deck * c2 = deckCreate();
+//
+//	Deck * d3 = deckShuffle(c1, c2);
+//
+//	deckPrint(d3, stdout);
+//
+//	deckDestroy(d3);
+	
+	// Test splitting with unitizialized target decks
+	Deck * d1 = NULL;
+	Deck * d2 = NULL;
+	Deck * og_deck = deckCreate();
+	
+	printf("OG Deck:\n");
+	deckPrint(og_deck, stdout);
+	printf("\n\n");
+	
+	deckSplit(og_deck, 10, &d1, &d2);
+	
+	printf("Deck 1:\n");
+	deckPrint(d1, stdout);
+	printf("\n\n");
+	
+	printf("Deck 2\n");
+	deckPrint(d2, stdout);
+	printf("\n\n");
+	
+	deckDestroy(d1);
+	deckDestroy(d2);
+	
+	// Split to the same deck
+	Deck * d3 = deckCreate();
+	Deck * d4 = NULL;
+	
+	deckSplit(d3, 10, &d4, &d4);
+	
+	printf("Deck 4:\n");
+	deckPrint(d4, stdout);
+	printf("\n\n");
+	
+	deckDestroy(d4);
+	
+	// Split a deck to itself
+	Deck * selfdeck = deckCreate();
+	
+	deckSplit(selfdeck, 10, &selfdeck, &selfdeck);
+	
+	printf("Deck 5:\n");
+	deckPrint(selfdeck, stdout);
+	printf("\n\n");
+	
+//	Deck * shuffdeck = deckShuffle(selfdeck, selfdeck);
+//
+//	printf("Deck 6:\n");
+//	deckPrint(shuffdeck, stdout);
+//	printf("\n\n");
+//
+//	deckDestroy(shuffdeck);
+	
+	// Empty shuffle
+//	Deck * regdeck = deckCreate();
+	Deck * emptdeck = NULL;
+	
+	Deck * outdeck = deckShuffle(emptdeck, emptdeck);
+	
+	printf("Deck 1:\n");
+	deckPrint(outdeck, stdout);
+	printf("\n\n");
+	
+	// Plit empty decks
+	Deck * ndeck = NULL;
+	Deck * regdeck = deckCreate();
+	for (int i = 0; i < 52; i++) {
+		deckGetCard(regdeck);
+	}
+	
+	Deck * out1 = NULL;
+	Deck * out2 = NULL;
+	
+	deckSplit(regdeck, 10, &out1, &out2);
+	
+	printf("OG Deck:\n");
+	deckPrint(out1, stdout);
+	printf("\n\n");
+	
+	printf("OG Deck:\n");
+	deckPrint(out2, stdout);
+	printf("\n\n");
 
 	return 0;
 }

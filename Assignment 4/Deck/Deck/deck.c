@@ -135,6 +135,7 @@ static void inline _wireUp(Deck * new, Deck * old) {
 		exit(ERR_DEC_ALC);
 	}
 	
+	// Set the first/next, last, and length values of the new deck
 	(new->length) ? (new->last->next = old->first) : (new->first = old->first);
 	new->last = old->last;
 	new->length += old->length;
@@ -249,7 +250,7 @@ Card deckGetCard(Deck * deck) {
 	
 	Card card = deck->first->data;
 	
-	// Prune Deck
+	// Pop the node, update the deck
 	Node * node = deck->first;
 	if (deck->first->next) { deck->first = deck->first->next; }
 	deck->length--;
@@ -297,13 +298,14 @@ inline void deckPutCard(Deck * deck, Card card) {
 */
 void deckSplit(Deck * deck, int n, Deck ** first_deck, Deck ** second_deck) {
 	
-	if (!deck) {
-		fprintf(stderr, "Attempted to split a NULL deck.");
-		exit(ERR_DEC_ALC);
-	}
-
 	Deck * upper_split = _deckCreateEmptyDeck();
 	Deck * lower_split = _deckCreateEmptyDeck();
+	
+	if (!deck) {
+		*first_deck = upper_split;
+		*second_deck = lower_split;
+		return;
+	}
 
 	if (n >= deck->length) {
 		_wireUp(upper_split, deck);
@@ -334,12 +336,21 @@ void deckSplit(Deck * deck, int n, Deck ** first_deck, Deck ** second_deck) {
 */
 Deck * deckShuffle(Deck * left_deck, Deck * right_deck) {
 	
-	if (!(left_deck && right_deck)) {
-		fprintf(stderr, "Attempted to shuffle a NULL deck.");
-		exit(ERR_DEC_ALC);
-	}
-	
 	Deck * new_deck = _deckCreateEmptyDeck();
+	
+	if (!(left_deck || right_deck)) {
+		new_deck = _deckCreateEmptyDeck();
+		return new_deck;
+	} else if (!left_deck) {
+		deckDestroy(left_deck);
+		_wireUp(new_deck, right_deck);
+		return new_deck;
+	} else if (!right_deck) {
+		deckDestroy(right_deck);
+		_wireUp(new_deck, left_deck);
+		return new_deck;
+	}
+
 	size_t iter_length = (left_deck->length < right_deck->length) ? left_deck->length : right_deck->length;
 	
 	for (size_t i = 0; i < iter_length; i++) {
@@ -374,15 +385,14 @@ Deck * deckShuffle(Deck * left_deck, Deck * right_deck) {
 void deckPrint(const Deck * deck, FILE * file) {
 	
 	if (!deck) {
-		fprintf(stderr, "Attempted to print a NULL deck.");
-		exit(ERR_DEC_ALC);
+		return;
 	} else if (!file) {
 		fprintf(stderr, "Attempted to write to an invalid file.");
 		exit(ERR_BAD_FLE);
 	}
 	
-	Node * curr_node = deck->first;
 	size_t count = deck->length;
+	Node * curr_node = deck->first;
 	
 	while (curr_node) {
 		fprintf(file, "%c%c", curr_node->data.rank, curr_node->data.suit);
