@@ -186,7 +186,6 @@ Deck * deckCreate(void) {
 void deckDestroy(Deck * deck) {
 	
 	if (!deck) {
-		fprintf(stderr, "Warning: Attempted to destroy a NULL deck.");
 		return;
 	}
 	
