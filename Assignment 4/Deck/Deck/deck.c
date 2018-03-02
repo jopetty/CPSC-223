@@ -350,9 +350,9 @@ Deck * deckShuffle(Deck * left_deck, Deck * right_deck) {
 		return new_deck;
 	}
 
-	size_t iter_length = (left_deck->length < right_deck->length) ? left_deck->length : right_deck->length;
+	size_t * iter_length = (left_deck->length < right_deck->length) ? &left_deck->length : &right_deck->length;
 	
-	for (size_t i = 0; i < iter_length; i++) {
+	while (*iter_length) {
 		deckPutCard(new_deck, deckGetCard(left_deck));
 		deckPutCard(new_deck, deckGetCard(right_deck));
 	}
@@ -365,8 +365,12 @@ Deck * deckShuffle(Deck * left_deck, Deck * right_deck) {
 		deckDestroy(left_deck);
 		_wireUp(new_deck, right_deck);
 	} else {
-		deckDestroy(left_deck);
-		deckDestroy(right_deck);
+		if (left_deck == right_deck) {
+			deckDestroy(left_deck);
+		} else {
+			deckDestroy(left_deck);
+			deckDestroy(right_deck);
+		}
 	}
 	
 	return new_deck;

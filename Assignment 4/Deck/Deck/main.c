@@ -97,13 +97,13 @@ int main(int argc, const char * argv[]) {
 	deckPrint(selfdeck, stdout);
 	printf("\n\n");
 	
-//	Deck * shuffdeck = deckShuffle(selfdeck, selfdeck);
-//
-//	printf("Deck 6:\n");
-//	deckPrint(shuffdeck, stdout);
-//	printf("\n\n");
-//
-//	deckDestroy(shuffdeck);
+	Deck * shuffdeck = deckShuffle(selfdeck, selfdeck);
+
+	printf("Deck 6:\n");
+	deckPrint(shuffdeck, stdout);
+	printf("\n\n");
+
+	deckDestroy(shuffdeck);
 	
 	// Empty shuffle
 //	Deck * regdeck = deckCreate();
