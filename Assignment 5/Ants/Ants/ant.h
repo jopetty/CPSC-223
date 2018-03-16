@@ -47,15 +47,44 @@ typedef struct antfarm AntFarm;
 Ant createAntWithCharacter(int c);
 
 /**
- Initializes a blank 2^32 × 2^32 × 2^32 universe. Positions are reduced to a 1-D array
- using a hash map.
+ Creates a new, empty universe of NULL Tile pointers.
+ In the context of the application, the universe should
+ be a singleton.
  
- @return An array whose entries are linked lists of positions/characters
-*/
+ @return A pointer to the new universe.
+ */
 Universe * createUniverse(void);
+
+/**
+ Frees all dynamically allocated memory in the universe;
+ Frees all tiles and then the universe wrapper itself.
+ 
+ @param universe	The singleton universe.
+ */
 void destroyUniverse(Universe * universe);
 
+/**
+ Retrieves the character placed at a given position, or
+ a space (' ') if no character was placed there.
+ 
+ @param ant	The ant located at the requested position.
+ @param universe	The singleton universe.
+ 
+ @return The character located at the ant's position, or
+ a space if no character has been placed.
+ */
 int getCharAt(Ant ant, Universe * universe);
+
+/**
+ Places the ant's character at the ants current location.
+ If the location as been marked before, the character at
+ that position is simply changed to the current character;
+ otherwise, a new Tile is constructed and placed at the
+ end of the linked list for that particular hash value.
+ 
+ @param ant	The ant in question.
+ @param universe	The singleton universe.
+ */
 void placeAntAt(Ant ant, Universe * universe);
 
 #endif /* ant_h */

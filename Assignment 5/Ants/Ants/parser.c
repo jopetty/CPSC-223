@@ -10,8 +10,6 @@
 
 #include "ant.h"
 
-// MARK: - Methods
-
 /**
  Reads instructions from @p stdin and manipulates ants based on the commands
 */

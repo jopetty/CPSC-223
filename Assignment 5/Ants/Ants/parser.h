@@ -11,8 +11,9 @@
 
 #include <stdio.h>
 
-// MARK:- Methods
-
+/**
+ Reads instructions from @p stdin and manipulates ants based on the commands
+ */
 void parse_input(void);
 
 #endif /* parser_h */

@@ -14,10 +14,8 @@
 #include <limits.h>
 
 #define MAX_UNI_SZE	(UINT16_MAX)
-#define HASH_BYTES	(100)
 
 #define ERR_ANT_FRM	(1)
-#define ERR_NO_CHAR	(-1)
 
 // MARK: - Properties
 
@@ -27,17 +25,19 @@
  is retrieved by first computing the hash of the position,
  and then checking the position against the target to
  mitigate collisions.
+ 
+ Positions are stored as unsigned integers to make conversion
+ to an array index via the hash function easier.
 */
 typedef struct tile {
 	int character;
 	unsigned int x;
 	unsigned int y;
 	unsigned int z;
-	
 	struct tile * next;
 } Tile;
 
-/*
+/**
  A hash table for Tiles. Implemented as a 2^16 bit array of
  linked lists of Tiles. Indices are accessed via the hash
  function. If no Tiles are placed in a given slot, the
@@ -49,6 +49,20 @@ struct universe {
 
 // MARK: - Private Methods
 
+/**
+ Computes a 16-bit hash of the input position and returns
+ the value as an array index. The algorithm hashes each
+ coordinate independently, and then combines them via
+ @p hash @p = @p hash(x) @p & @p (hash(y) + hash(z)).
+ This combination was found through trial and error to
+ produce relatively few collisions.
+ 
+ @param x	The X coordinate.
+ @param y	The Y coordinate.
+ @param z	The Z Coordinate.
+ 
+ @returns The hash of the tuple (x,y,z).
+*/
 static uint16_t getHashIndex(unsigned int x, unsigned int y, unsigned int z) {
 	
 	size_t hash[3] = {x,y,z};
@@ -60,7 +74,7 @@ static uint16_t getHashIndex(unsigned int x, unsigned int y, unsigned int z) {
 	
 	// Downcast to prevent over-indexing.
 	// & + is just from fiddling around to find the fewest collisions.
-	uint16_t h = (uint16_t)(hash[0] & hash[1] + hash[2]);
+	uint16_t h = (uint16_t)(hash[0] & (hash[1] + hash[2]));
 	return h;
 }
 
@@ -117,13 +131,11 @@ void destroyUniverse(Universe * universe) {
 	
 	if (universe == NULL) { return; }
 	
-	size_t count = 0;
 	for (size_t i = 0; i < MAX_UNI_SZE; i++) {
 		if (universe->data[i]) {
 			Tile * next;
 			Tile * curr = universe->data[i];
 			while (curr) {
-				count++;
 				if (curr->next) {
 					next = curr->next;
 					free(curr);
@@ -133,8 +145,6 @@ void destroyUniverse(Universe * universe) {
 					curr = NULL;
 				}
 			}
-//			fprintf(stderr, "Universe[%zu] had %zu entries.\n", i, count);
-			count = 0;
 		}
 	}
 	
@@ -192,7 +202,7 @@ int getCharAt(Ant ant, Universe * universe) {
  end of the linked list for that particular hash value.
  
  @param ant	The ant in question.
- @param universe	The singleton universe
+ @param universe	The singleton universe.
 */
 void placeAntAt(Ant ant, Universe * universe) {
 	
