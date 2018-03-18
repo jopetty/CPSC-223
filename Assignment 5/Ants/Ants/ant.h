@@ -14,6 +14,11 @@
 
 // MARK: - Properties
 
+/**
+ A location in a 2^32 × 2^32 × 2^32 universe. All
+ coordinates are unsigned, and must be in the range
+ of 0 to 2^32-1.
+*/
 typedef struct position {
 	uint32_t x;
 	uint32_t y;
@@ -22,8 +27,7 @@ typedef struct position {
 
 /**
  Ant ant in the game. Each ant has a character and a position in 3D Cartesian space.
- @p character can be any valid ASCII character. @p x, @p y, @p z must be in the
- range 0 to 2^32 - 1.
+ @p character can be any valid ASCII character.
  */
 typedef struct ant {
 	int character;
@@ -40,7 +44,7 @@ typedef struct universe Universe;
 */
 typedef struct antfarm AntFarm;
 
-// MARK: - Methods
+// MARK: - Functions
 
 /**
  Creates a new ant at a default starting position with the given character.

@@ -9,8 +9,12 @@
 #include "parser.h"
 #include "ant.h"
 
+#include <stdlib.h>
+
+#define ERR_BAD_CHAR	(2) // Status if illegal character is found as ant identifier
+
 /**
- Reads instructions from @p stdin and manipulates ants based on the commands
+ Reads instructions from @c stdin and manipulates ants based on the commands
 */
 void parseInput(void) {
 	
@@ -26,25 +30,52 @@ void parseInput(void) {
 	
 	while ((c = getchar()) != EOF) {
 		if (0 == count++) {
-			anthony = antfarm[c];
+			if (c < 256) {
+				anthony = antfarm[c];
+			} else {
+				// We only declared ants for ASCII characters in the ant farm;
+				// anything > 256 will be out of bounds for the array.
+				fprintf(stderr, "Fatal Error: Encountered an illegal identifying character.\n");
+				exit(ERR_BAD_CHAR);
+			}
 		} else {
-			if ('h' == c) { anthony.position.x--; }
-			else if ('j' == c) { anthony.position.y--; }
-			else if ('k' == c) { anthony.position.y++; }
-			else if ('l' == c) { anthony.position.x++; }
-			else if ('<' == c) { anthony.position.z++; }
-			else if ('>' == c) { anthony.position.z--; }
-			else if ('*' == c) {
-				anthony.position.x *= 2;
-				anthony.position.y *= 2;
-				anthony.position.z *= 2;
-			} else if ('.' == c) {
-				placeChar(anthony, universe);
-			} else if ('?' == c) {
-				printf("%c", getCharAt(anthony.position, universe));
-			} else if ('\n' == c) {
-				antfarm[anthony.character] = anthony;
-				count = 0;
+			switch (c) {
+				case 'h':
+					anthony.position.x--;
+					break;
+				case 'j':
+					anthony.position.y--;
+					break;
+				case 'k':
+					anthony.position.y++;
+					break;
+				case 'l':
+					anthony.position.x++;
+					break;
+				case '<':
+					anthony.position.z++;
+					break;
+				case '>':
+					anthony.position.z--;
+					break;
+				case '*':
+					anthony.position.x *= 2;
+					anthony.position.y *= 2;
+					anthony.position.z *= 2;
+					break;
+				case '.':
+					placeChar(anthony, universe);
+					break;
+				case '?':
+					printf("%c", getCharAt(anthony.position, universe));
+					break;
+				case '\n':
+					antfarm[anthony.character] = anthony;
+					count = 0;
+					break;
+					
+				default:
+					break;
 			}
 		}
 	}

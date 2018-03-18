@@ -44,7 +44,7 @@ struct universe {
 	Tile * data[MAX_UNI_SZE];
 };
 
-// MARK: - Private Methods
+// MARK: - Private Functions
 
 /**
  Computes a 16-bit hash of the input position and returns
@@ -54,7 +54,7 @@ struct universe {
  This combination was found through trial and error to
  produce relatively few collisions.
  
- @param position	The desired position.
+ @param position	The current position.
  
  @returns The hash of the tuple @p (x,y,z).
 */
@@ -89,7 +89,7 @@ static Tile * createTileFromAnt(Ant ant) {
 	return tile;
 }
 
-// MARK: - Public Methods
+// MARK: - Public Functions
 
 /**
  Creates a new, empty universe of NULL Tile pointers.
@@ -116,7 +116,7 @@ Universe * createUniverse(void) {
  Frees all dynamically allocated memory in the universe;
  Frees all tiles and then the universe wrapper itself.
  
- @param universe	The singleton universe.
+ @param universe	The universe.
 */
 void destroyUniverse(Universe * universe) {
 	
@@ -162,17 +162,16 @@ inline Ant createAntWithCharacter(int character) {
  a space (' ') if no character was placed there.
  
  @param position	The requested position.
- @param universe	The singleton universe.
+ @param universe	The universe.
  
- @return The character located at the ant's position, or
+ @return The character located at the given position, or
  a space if no character has been placed.
 */
 int getCharAt(Position position, Universe * universe) {
 	
 	if (NULL == universe) { return ' '; }
 	
-	size_t index = getHashIndex(position);
-	Tile * tile = universe->data[index];
+	Tile * tile = universe->data[getHashIndex(position)];
 	while (tile) {
 		if ((tile->position.x == position.x) && (tile->position.y == position.y) && (tile->position.z == position.z)) {
 			return tile->character;
@@ -186,14 +185,14 @@ int getCharAt(Position position, Universe * universe) {
 }
 
 /**
- Places the ant's character at the ants current location.
+ Places the ant's character at the ant's current location.
  If the location as been marked before, the character at
  that position is simply changed to the current character;
  otherwise, a new Tile is constructed and placed at the
  end of the linked list for that particular hash value.
  
- @param ant	The ant in question.
- @param universe	The singleton universe.
+ @param ant	The current ant.
+ @param universe	The universe.
 */
 void placeChar(Ant ant, Universe * universe) {
 	
