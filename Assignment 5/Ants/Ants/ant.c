@@ -13,9 +13,8 @@
 #include <string.h>
 #include <limits.h>
 
-#define MAX_UNI_SZE	(UINT16_MAX)
-
-#define ERR_ANT_FRM	(1)
+#define MAX_UNI_SZE		(UINT16_MAX) // Number of entries in hash table
+#define ERR_UNIVERSE	(1)			 // Status if Universe is NULL
 
 // MARK: - Properties
 
@@ -31,9 +30,7 @@
 */
 typedef struct tile {
 	int character;
-	unsigned int x;
-	unsigned int y;
-	unsigned int z;
+	Position position;
 	struct tile * next;
 } Tile;
 
@@ -53,29 +50,25 @@ struct universe {
  Computes a 16-bit hash of the input position and returns
  the value as an array index. The algorithm hashes each
  coordinate independently, and then combines them via
- @p hash @p = @p hash(x) @p & @p (hash(y) + hash(z)).
+ @p hash @p = @p hash(x) @p & @p (hash(y) @p + @p hash(z)).
  This combination was found through trial and error to
  produce relatively few collisions.
  
- @param x	The X coordinate.
- @param y	The Y coordinate.
- @param z	The Z Coordinate.
+ @param position	The desired position.
  
- @returns The hash of the tuple (x,y,z).
+ @returns The hash of the tuple @p (x,y,z).
 */
-static uint16_t getHashIndex(unsigned int x, unsigned int y, unsigned int z) {
+static uint16_t getHashIndex(Position position) {
 	
-	size_t hash[3] = {x,y,z};
+	size_t hash[3] = { position.x, position.y, position.z };
 	for (size_t i = 0; i < 12; i++) {
 		for (size_t j = 0; j < 3; j++) {
 			hash[j] = ((hash[j] >> 8)^hash[j])*0x6B + i;
 		}
 	}
 	
-	// Downcast to prevent over-indexing.
-	// & + is just from fiddling around to find the fewest collisions.
-	uint16_t h = (uint16_t)(hash[0] & (hash[1] + hash[2]));
-	return h;
+	// Downcast to prevent over-indexing
+	return (uint16_t)(hash[0] & (hash[1] + hash[2]));
 }
 
 /**
@@ -88,14 +81,12 @@ static uint16_t getHashIndex(unsigned int x, unsigned int y, unsigned int z) {
 */
 static Tile * createTileFromAnt(Ant ant) {
 	
-	Tile * t = malloc(sizeof(*t));
-	t->character = ant.character;
-	t->x = ant.x;
-	t->y = ant.y;
-	t->z = ant.z;
-	t->next = NULL;
+	Tile * tile = malloc(sizeof(*tile));
+	tile->character = ant.character;
+	tile->position = ant.position;
+	tile->next = NULL;
 	
-	return t;
+	return tile;
 }
 
 // MARK: - Public Methods
@@ -112,7 +103,7 @@ Universe * createUniverse(void) {
 	Universe * universe = malloc(sizeof(*universe));
 	if (NULL == universe) {
 		fprintf(stderr, "Fatal Error: Could not initialize a Universe.\n");
-		exit(ERR_ANT_FRM);
+		exit(ERR_UNIVERSE);
 	}
 	for (size_t i = 0; i < MAX_UNI_SZE; i++) {
 		universe->data[i] = NULL;
@@ -155,16 +146,14 @@ void destroyUniverse(Universe * universe) {
 /**
  Creates a new Ant at (0,0,0) with the given character.
  
- @param c	An ASCII character (0--255).
+ @param character	An ASCII character (0--255).
  
- @return An Ant with values {c, 0, 0, 0}.
+ @return An Ant with values @p {c,0,0,0}.
 */
-inline Ant createAntWithCharacter(int c) {
+inline Ant createAntWithCharacter(int character) {
 	return (Ant) {
-		.character = c,
-		.x = 0,
-		.y = 0,
-		.z = 0
+		.character = character,
+		.position = (Position) { .x = 0, .y = 0, .z = 0 }
 	};
 }
 
@@ -172,18 +161,20 @@ inline Ant createAntWithCharacter(int c) {
  Retrieves the character placed at a given position, or
  a space (' ') if no character was placed there.
  
- @param ant	The ant located at the requested position.
+ @param position	The requested position.
  @param universe	The singleton universe.
  
  @return The character located at the ant's position, or
  a space if no character has been placed.
 */
-int getCharAt(Ant ant, Universe * universe) {
+int getCharAt(Position position, Universe * universe) {
 	
-	size_t index = getHashIndex(ant.x, ant.y, ant.z);
+	if (NULL == universe) { return ' '; }
+	
+	size_t index = getHashIndex(position);
 	Tile * tile = universe->data[index];
 	while (tile) {
-		if (tile->x == ant.x && tile->y == ant.y && tile->z == ant.z) {
+		if ((tile->position.x == position.x) && (tile->position.y == position.y) && (tile->position.z == position.z)) {
 			return tile->character;
 		} else {
 			tile = tile->next;
@@ -204,16 +195,21 @@ int getCharAt(Ant ant, Universe * universe) {
  @param ant	The ant in question.
  @param universe	The singleton universe.
 */
-void placeAntAt(Ant ant, Universe * universe) {
+void placeChar(Ant ant, Universe * universe) {
+	
+	if (NULL == universe) {
+		fprintf(stderr, "Fatal Error: Attempted to place character in a NULL universe.\n");
+		exit(ERR_UNIVERSE);
+	}
 	
 	Tile * tile;
-	size_t i = getHashIndex(ant.x, ant.y, ant.z);
+	size_t i = getHashIndex(ant.position);
 	
 	// Check if the hash table is not NULL for this position
 	if ((tile = universe->data[i])) {
 		
-		while (tile) { // Find the value in the hash table with the right position
-			if ((tile->x == ant.x) && (tile->y == ant.y) && (tile->z == ant.z)) {
+		while (tile) { // Check if position is correct
+			if ((tile->position.x == ant.position.x) && (tile->position.y == ant.position.y) && (tile->position.z == ant.position.z)) {
 				tile->character = ant.character;
 				return;
 			} else {

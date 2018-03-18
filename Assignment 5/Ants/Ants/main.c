@@ -18,7 +18,7 @@ int main(int argc, const char * argv[]) {
 		exit(EXIT_FAILURE);
 	}
 	
-	parse_input();
+	parseInput();
 	
 	return EXIT_SUCCESS;
 }

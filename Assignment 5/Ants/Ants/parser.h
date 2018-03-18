@@ -14,6 +14,6 @@
 /**
  Reads instructions from @p stdin and manipulates ants based on the commands
  */
-void parse_input(void);
+void parseInput(void);
 
 #endif /* parser_h */

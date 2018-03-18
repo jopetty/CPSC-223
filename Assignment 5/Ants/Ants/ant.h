@@ -10,8 +10,15 @@
 #define ant_h
 
 #include <stdio.h>
+#include <stdint.h>
 
 // MARK: - Properties
+
+typedef struct position {
+	uint32_t x;
+	uint32_t y;
+	uint32_t z;
+} Position;
 
 /**
  Ant ant in the game. Each ant has a character and a position in 3D Cartesian space.
@@ -20,9 +27,7 @@
  */
 typedef struct ant {
 	int character;
-	unsigned int x;
-	unsigned int y;
-	unsigned int z;
+	Position position;
 } Ant;
 
 /**
@@ -40,11 +45,11 @@ typedef struct antfarm AntFarm;
 /**
  Creates a new ant at a default starting position with the given character.
  
- @param c	An ASCII character (0--255).
+ @param character	An ASCII character (0--255).
  
  @return An Ant with character @p c at position (0,0,0).
 */
-Ant createAntWithCharacter(int c);
+Ant createAntWithCharacter(int character);
 
 /**
  Creates a new, empty universe of NULL Tile pointers.
@@ -67,13 +72,13 @@ void destroyUniverse(Universe * universe);
  Retrieves the character placed at a given position, or
  a space (' ') if no character was placed there.
  
- @param ant	The ant located at the requested position.
+ @param position	The requested position.
  @param universe	The singleton universe.
  
  @return The character located at the ant's position, or
  a space if no character has been placed.
  */
-int getCharAt(Ant ant, Universe * universe);
+int getCharAt(Position position, Universe * universe);
 
 /**
  Places the ant's character at the ants current location.
@@ -85,6 +90,6 @@ int getCharAt(Ant ant, Universe * universe);
  @param ant	The ant in question.
  @param universe	The singleton universe.
  */
-void placeAntAt(Ant ant, Universe * universe);
+void placeChar(Ant ant, Universe * universe);
 
 #endif /* ant_h */

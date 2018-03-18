@@ -7,13 +7,12 @@
 //
 
 #include "parser.h"
-
 #include "ant.h"
 
 /**
  Reads instructions from @p stdin and manipulates ants based on the commands
 */
-void parse_input(void) {
+void parseInput(void) {
 	
 	int c = 0;
 	size_t count = 0;
@@ -26,25 +25,23 @@ void parse_input(void) {
 	}
 	
 	while ((c = getchar()) != EOF) {
-		
 		if (0 == count++) {
 			anthony = antfarm[c];
 		} else {
-			
-			if ('h' == c) { anthony.x--; }
-			else if ('j' == c) { anthony.y--; }
-			else if ('k' == c) { anthony.y++; }
-			else if ('l' == c) { anthony.x++; }
-			else if ('<' == c) { anthony.z++; }
-			else if ('>' == c) { anthony.z--; }
+			if ('h' == c) { anthony.position.x--; }
+			else if ('j' == c) { anthony.position.y--; }
+			else if ('k' == c) { anthony.position.y++; }
+			else if ('l' == c) { anthony.position.x++; }
+			else if ('<' == c) { anthony.position.z++; }
+			else if ('>' == c) { anthony.position.z--; }
 			else if ('*' == c) {
-				anthony.x *= 2;
-				anthony.y *= 2;
-				anthony.z *= 2;
+				anthony.position.x *= 2;
+				anthony.position.y *= 2;
+				anthony.position.z *= 2;
 			} else if ('.' == c) {
-				placeAntAt(anthony, universe);
+				placeChar(anthony, universe);
 			} else if ('?' == c) {
-				printf("%c", getCharAt(anthony, universe));
+				printf("%c", getCharAt(anthony.position, universe));
 			} else if ('\n' == c) {
 				antfarm[anthony.character] = anthony;
 				count = 0;
