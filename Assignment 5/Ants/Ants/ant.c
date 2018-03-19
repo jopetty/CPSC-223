@@ -29,7 +29,7 @@
  to an array index via the hash function easier.
 */
 typedef struct tile {
-	int character;
+	uint16_t character;
 	Position position;
 	struct tile * next;
 } Tile;
@@ -150,7 +150,7 @@ void destroyUniverse(Universe * universe) {
  
  @return An Ant with values @p {c,0,0,0}.
 */
-inline Ant createAntWithCharacter(int character) {
+inline Ant createAntWithCharacter(uint16_t character) {
 	return (Ant) {
 		.character = character,
 		.position = (Position) { .x = 0, .y = 0, .z = 0 }
@@ -173,7 +173,10 @@ int getCharAt(Position position, Universe * universe) {
 	
 	Tile * tile = universe->data[getHashIndex(position)];
 	while (tile) {
-		if ((tile->position.x == position.x) && (tile->position.y == position.y) && (tile->position.z == position.z)) {
+		if ((tile->position.x == position.x) &&
+			(tile->position.y == position.y) &&
+			(tile->position.z == position.z)) {
+			
 			return tile->character;
 		} else {
 			tile = tile->next;
@@ -197,7 +200,7 @@ int getCharAt(Position position, Universe * universe) {
 void placeChar(Ant ant, Universe * universe) {
 	
 	if (NULL == universe) {
-		fprintf(stderr, "Fatal Error: Attempted to place character in a NULL universe.\n");
+		fprintf(stderr, "Fatal Error: Attempted to place character in a NULL Universe.\n");
 		exit(ERR_UNIVERSE);
 	}
 	
@@ -208,7 +211,10 @@ void placeChar(Ant ant, Universe * universe) {
 	if ((tile = universe->data[i])) {
 		
 		while (tile) { // Check if position is correct
-			if ((tile->position.x == ant.position.x) && (tile->position.y == ant.position.y) && (tile->position.z == ant.position.z)) {
+			if ((tile->position.x == ant.position.x) &&
+				(tile->position.y == ant.position.y) &&
+				(tile->position.z == ant.position.z)) {
+				
 				tile->character = ant.character;
 				return;
 			} else {

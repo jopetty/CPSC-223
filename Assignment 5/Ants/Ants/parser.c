@@ -11,6 +11,7 @@
 
 #include <stdlib.h>
 
+#define ANT_FRM_SZE	(256) // Number of ants, one for each ASCII character
 #define ERR_BAD_CHAR	(2) // Status if illegal character is found as ant identifier
 
 /**
@@ -18,23 +19,23 @@
 */
 void parseInput(void) {
 	
-	int c = 0;
+	int c = 0; // Must be signed to check for EOF
 	size_t count = 0;
 	Universe * universe = createUniverse();
 	Ant anthony = createAntWithCharacter(' ');
 	
-	Ant antfarm[256];
-	for (int i = 0; i < 256; i++) {
+	Ant antfarm[ANT_FRM_SZE];
+	for (int i = 0; i < ANT_FRM_SZE; i++) {
 		antfarm[i] = createAntWithCharacter(i);
 	}
 	
 	while ((c = getchar()) != EOF) {
 		if (0 == count++) {
-			if (c < 256) {
+			if (c < ANT_FRM_SZE) {
 				anthony = antfarm[c];
 			} else {
 				// We only declared ants for ASCII characters in the ant farm;
-				// anything > 256 will be out of bounds for the array.
+				// any index > 256 will be out of bounds for the array.
 				fprintf(stderr, "Fatal Error: Encountered an illegal identifying character.\n");
 				exit(ERR_BAD_CHAR);
 			}

@@ -53,7 +53,7 @@ typedef struct antfarm AntFarm;
  
  @return An Ant with character @p c at position (0,0,0).
 */
-Ant createAntWithCharacter(int character);
+Ant createAntWithCharacter(uint16_t character);
 
 /**
  Creates a new, empty universe of NULL Tile pointers.
