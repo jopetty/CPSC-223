@@ -13,8 +13,8 @@
 #include <string.h>
 #include <limits.h>
 
-#define MAX_UNI_SZE		(UINT16_MAX) // Number of entries in hash table
-#define ERR_UNIVERSE	(1)			 // Status if Universe is NULL
+#define MAX_UNI_SZE	(UINT16_MAX) // Number of entries in hash table
+#define ERR_UNIVERSE	(1)          // Status if Universe is NULL
 
 // MARK: - Properties
 
@@ -63,7 +63,7 @@ static uint16_t getHashIndex(Position position) {
 	size_t hash[3] = { position.x, position.y, position.z };
 	for (size_t i = 0; i < 12; i++) {
 		for (size_t j = 0; j < 3; j++) {
-			hash[j] = ((hash[j] >> 8)^hash[j])*0x6B + i;
+			hash[j] = ((hash[j] >> 8) ^ hash[j]) * 0x6B + i;
 		}
 	}
 	
@@ -73,7 +73,7 @@ static uint16_t getHashIndex(Position position) {
 
 /**
  Creates a new tile in the universe with the character
- and position of an Ant.
+ and position of the Ant.
  
  @param ant	An ant.
  

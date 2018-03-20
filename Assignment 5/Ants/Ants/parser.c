@@ -12,10 +12,10 @@
 #include <stdlib.h>
 
 #define ANT_FRM_SZE	(256) // Number of ants, one for each ASCII character
-#define ERR_BAD_CHAR	(2) // Status if illegal character is found as ant identifier
+#define ERR_BAD_CHAR	(2)   // Status if illegal character is found as ant identifier
 
 /**
- Reads instructions from @c stdin and manipulates ants based on the commands
+ Reads instructions from @c stdin and manipulates ants based on the commands.
 */
 void parseInput(void) {
 	
@@ -82,5 +82,4 @@ void parseInput(void) {
 	}
 	
 	destroyUniverse(universe);
-	
 }
