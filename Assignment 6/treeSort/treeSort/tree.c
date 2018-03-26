@@ -10,20 +10,40 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+
+#define ERR_BAD_NODE	(1)	// Node * is NULL
+#define ERR_BAD_INPUT	(2) // Encountered an illegal character in input
 
 // MARK: - Properties
 
 struct node {
-	unsigned int size;
-	struct node * children[];
+	size_t size;
+	Node * parent;
+	Node * children[];
 };
 
 // MARK: - Static Functions
 
-void swap(Node * array[], size_t i, size_t j) {
+static void swap(Node * array[], size_t i, size_t j) {
 	Node * tmp = array[i];
 	array[i] = array[j];
 	array[j] = tmp;
+}
+
+static Node * createNodeWithSize(size_t size) {
+	Node * node = malloc(sizeof(*node) + size);
+	if (NULL == node) {
+		fprintf(stderr, "Fatal Error: Unable to create node.\n");
+		exit(ERR_BAD_NODE);
+	}
+	
+	node->size = size;
+	node->parent = NULL;
+	
+	memset(node + sizeof(node->size) + sizeof(node->parent), NULL, size);
+	
+	return node;
 }
 
 /**
@@ -65,20 +85,60 @@ void sortTree(Node * root) {
 	}
 }
 
-void printTree(Node * root) {
+Node * parseTree(void) {
+	int c;
+	size_t complete = 1; // Has a full tree been parsed?
+	size_t level = 0;
+	Node * tree = NULL;
+	
+	while ((c = getchar()) != EOF) {
+		switch (c) {
+			case '[':
+				complete = 0;
+				level++;
+				break;
+				
+			case ']':
+				if (level > 0) {
+					
+				} else { // Too many closing braces
+					fellTree(tree);
+					exit(ERR_BAD_INPUT);
+				}
+				
+			default:
+				if (complete) {
+					return tree;
+				} else {
+					fellTree(tree);
+					exit(ERR_BAD_INPUT);
+				}
+				break;
+		}
+	}
+	
+	if (complete == 1 && level == 0) {
+		return tree;
+	} else {
+		fellTree(tree);
+		exit(ERR_BAD_INPUT);
+	}
+}
+
+void printTree(Node * tree) {
 	printf("[");
-	for (size_t i = 0; i < root->size; i++) {
-		printTree(root->children[i]);
+	for (size_t i = 0; i < tree->size; i++) {
+		printTree(tree->children[i]);
 	}
 	printf("]");
 }
 
-void fellTree(Node * root) {
-	for (size_t i = 0; i < root->size; i++) {
-		fellTree(root->children[i]);
+void fellTree(Node * tree) {
+	for (size_t i = 0; i < tree->size; i++) {
+		fellTree(tree->children[i]);
 	}
 	
-	free(root->children);
-	free(root);
-	root = NULL;
+	free(tree->children);
+	free(tree);
+	tree = NULL;
 }

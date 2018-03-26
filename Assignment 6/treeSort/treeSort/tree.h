@@ -21,4 +21,10 @@ typedef struct node Node;
  */
 void treeSort(Node * root);
 
+Node * parseTree(void);
+
+void printTree(Node * tree);
+
+void fellTree(Node * tree);
+
 #endif /* tree_h */
