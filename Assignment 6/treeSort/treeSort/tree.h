@@ -13,4 +13,12 @@
 
 typedef struct node Node;
 
+/**
+ Sorts a tree based on how many children each node has.
+ Recursively calls itself on all non-trivial sub-trees.
+ 
+ @param root	Pointer to the root node of a sub-tree.
+ */
+void treeSort(Node * root);
+
 #endif /* tree_h */

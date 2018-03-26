@@ -8,10 +8,17 @@
 
 #include "tree.h"
 
+#include <stdio.h>
+#include <stdlib.h>
+
+// MARK: - Properties
+
 struct node {
 	unsigned int size;
 	struct node * children[];
 };
+
+// MARK: - Static Functions
 
 void swap(Node * array[], size_t i, size_t j) {
 	Node * tmp = array[i];
@@ -25,17 +32,18 @@ void swap(Node * array[], size_t i, size_t j) {
  be replaced by a merge sort implementation.
 */
 static void sortChildren(Node * root) {
-	unsigned int min;
-	for (int i = 0; i < root->size - 1; i++) {
+	
+	size_t min;
+	for (size_t i = 0; i < root->size - 1; i++) {
+		
 		min = i;
-		for (int j = i+1; j < root->size; j++) {
+		for (size_t j = i+1; j < root->size; j++) {
 			if (root->children[j]->size < root->children[min]->size) {
 				min = j;
 			}
 		}
-		if (min != i) {
-			swap(root->children, i, min);
-		}
+		
+		if (min != i) { swap(root->children, i, min); }
 	}
 }
 
@@ -55,4 +63,22 @@ void sortTree(Node * root) {
 			sortTree(root->children[i]);
 		}
 	}
+}
+
+void printTree(Node * root) {
+	printf("[");
+	for (size_t i = 0; i < root->size; i++) {
+		printTree(root->children[i]);
+	}
+	printf("]");
+}
+
+void fellTree(Node * root) {
+	for (size_t i = 0; i < root->size; i++) {
+		fellTree(root->children[i]);
+	}
+	
+	free(root->children);
+	free(root);
+	root = NULL;
 }
