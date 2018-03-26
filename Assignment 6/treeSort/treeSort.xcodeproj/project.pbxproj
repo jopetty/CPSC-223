@@ -7,14 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2436938E204B573800E0EE49 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 2436938D204B573800E0EE49 /* main.c */; };
-		24369396204B575E00E0EE49 /* ant.c in Sources */ = {isa = PBXBuildFile; fileRef = 24369395204B575E00E0EE49 /* ant.c */; };
-		24369399204B58AD00E0EE49 /* parser.c in Sources */ = {isa = PBXBuildFile; fileRef = 24369398204B58AD00E0EE49 /* parser.c */; };
-		24D468D12058749F00718D50 /* Makefile in Sources */ = {isa = PBXBuildFile; fileRef = 24D468D02058749F00718D50 /* Makefile */; };
+		2455F74D2068A3B400DF40F4 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 2455F74C2068A3B400DF40F4 /* main.c */; };
+		2455F7552068A3DB00DF40F4 /* tree.c in Sources */ = {isa = PBXBuildFile; fileRef = 2455F7542068A3DB00DF40F4 /* tree.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		24369388204B573800E0EE49 /* CopyFiles */ = {
+		2455F7472068A3B400DF40F4 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = /usr/share/man/man1/;
@@ -26,18 +24,14 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		2436938A204B573800E0EE49 /* Ants */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Ants; sourceTree = BUILT_PRODUCTS_DIR; };
-		2436938D204B573800E0EE49 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
-		24369394204B575E00E0EE49 /* ant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ant.h; sourceTree = "<group>"; };
-		24369395204B575E00E0EE49 /* ant.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ant.c; sourceTree = "<group>"; };
-		24369397204B58AD00E0EE49 /* parser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = parser.h; sourceTree = "<group>"; };
-		24369398204B58AD00E0EE49 /* parser.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = parser.c; sourceTree = "<group>"; };
-		2436939A204BBAD700E0EE49 /* in.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = in.txt; sourceTree = "<group>"; };
-		24D468D02058749F00718D50 /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
+		2455F7492068A3B400DF40F4 /* treeSort */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = treeSort; sourceTree = BUILT_PRODUCTS_DIR; };
+		2455F74C2068A3B400DF40F4 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
+		2455F7532068A3DB00DF40F4 /* tree.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tree.h; sourceTree = "<group>"; };
+		2455F7542068A3DB00DF40F4 /* tree.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = tree.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		24369387204B573800E0EE49 /* Frameworks */ = {
+		2455F7462068A3B400DF40F4 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -47,104 +41,98 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		24369381204B573800E0EE49 = {
+		2455F7402068A3B400DF40F4 = {
 			isa = PBXGroup;
 			children = (
-				2436938C204B573800E0EE49 /* Ants */,
-				2436938B204B573800E0EE49 /* Products */,
+				2455F74B2068A3B400DF40F4 /* treeSort */,
+				2455F74A2068A3B400DF40F4 /* Products */,
 			);
 			sourceTree = "<group>";
 		};
-		2436938B204B573800E0EE49 /* Products */ = {
+		2455F74A2068A3B400DF40F4 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				2436938A204B573800E0EE49 /* Ants */,
+				2455F7492068A3B400DF40F4 /* treeSort */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		2436938C204B573800E0EE49 /* Ants */ = {
+		2455F74B2068A3B400DF40F4 /* treeSort */ = {
 			isa = PBXGroup;
 			children = (
-				2436938D204B573800E0EE49 /* main.c */,
-				2436939A204BBAD700E0EE49 /* in.txt */,
-				24369397204B58AD00E0EE49 /* parser.h */,
-				24369398204B58AD00E0EE49 /* parser.c */,
-				24D468D02058749F00718D50 /* Makefile */,
-				24369394204B575E00E0EE49 /* ant.h */,
-				24369395204B575E00E0EE49 /* ant.c */,
+				2455F74C2068A3B400DF40F4 /* main.c */,
+				2455F7532068A3DB00DF40F4 /* tree.h */,
+				2455F7542068A3DB00DF40F4 /* tree.c */,
 			);
-			path = Ants;
+			path = treeSort;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		24369389204B573800E0EE49 /* Ants */ = {
+		2455F7482068A3B400DF40F4 /* treeSort */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 24369391204B573800E0EE49 /* Build configuration list for PBXNativeTarget "Ants" */;
+			buildConfigurationList = 2455F7502068A3B400DF40F4 /* Build configuration list for PBXNativeTarget "treeSort" */;
 			buildPhases = (
-				24369386204B573800E0EE49 /* Sources */,
-				24369387204B573800E0EE49 /* Frameworks */,
-				24369388204B573800E0EE49 /* CopyFiles */,
+				2455F7452068A3B400DF40F4 /* Sources */,
+				2455F7462068A3B400DF40F4 /* Frameworks */,
+				2455F7472068A3B400DF40F4 /* CopyFiles */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
-			name = Ants;
-			productName = Ants;
-			productReference = 2436938A204B573800E0EE49 /* Ants */;
+			name = treeSort;
+			productName = treeSort;
+			productReference = 2455F7492068A3B400DF40F4 /* treeSort */;
 			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		24369382204B573800E0EE49 /* Project object */ = {
+		2455F7412068A3B400DF40F4 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 0920;
 				ORGANIZATIONNAME = "Jackson Petty";
 				TargetAttributes = {
-					24369389204B573800E0EE49 = {
+					2455F7482068A3B400DF40F4 = {
 						CreatedOnToolsVersion = 9.2;
 						ProvisioningStyle = Automatic;
 					};
 				};
 			};
-			buildConfigurationList = 24369385204B573800E0EE49 /* Build configuration list for PBXProject "Ants" */;
+			buildConfigurationList = 2455F7442068A3B400DF40F4 /* Build configuration list for PBXProject "treeSort" */;
 			compatibilityVersion = "Xcode 8.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
 			);
-			mainGroup = 24369381204B573800E0EE49;
-			productRefGroup = 2436938B204B573800E0EE49 /* Products */;
+			mainGroup = 2455F7402068A3B400DF40F4;
+			productRefGroup = 2455F74A2068A3B400DF40F4 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				24369389204B573800E0EE49 /* Ants */,
+				2455F7482068A3B400DF40F4 /* treeSort */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXSourcesBuildPhase section */
-		24369386204B573800E0EE49 /* Sources */ = {
+		2455F7452068A3B400DF40F4 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2436938E204B573800E0EE49 /* main.c in Sources */,
-				24369399204B58AD00E0EE49 /* parser.c in Sources */,
-				24D468D12058749F00718D50 /* Makefile in Sources */,
-				24369396204B575E00E0EE49 /* ant.c in Sources */,
+				2455F74D2068A3B400DF40F4 /* main.c in Sources */,
+				2455F7552068A3DB00DF40F4 /* tree.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		2436938F204B573800E0EE49 /* Debug */ = {
+		2455F74E2068A3B400DF40F4 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -199,7 +187,7 @@
 			};
 			name = Debug;
 		};
-		24369390204B573800E0EE49 /* Release */ = {
+		2455F74F2068A3B400DF40F4 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -247,34 +235,20 @@
 			};
 			name = Release;
 		};
-		24369392204B573800E0EE49 /* Debug */ = {
+		2455F7512068A3B400DF40F4 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 9BCGP8GVY3;
-				GCC_C_LANGUAGE_STANDARD = c99;
-				OTHER_CFLAGS = (
-					"-Wextra",
-					"-Wall",
-					"-pedantic",
-					"-Wstrict-prototypes",
-				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
 		};
-		24369393204B573800E0EE49 /* Release */ = {
+		2455F7522068A3B400DF40F4 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 9BCGP8GVY3;
-				GCC_C_LANGUAGE_STANDARD = c99;
-				OTHER_CFLAGS = (
-					"-Wextra",
-					"-Wall",
-					"-pedantic",
-					"-Wstrict-prototypes",
-				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -282,25 +256,25 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		24369385204B573800E0EE49 /* Build configuration list for PBXProject "Ants" */ = {
+		2455F7442068A3B400DF40F4 /* Build configuration list for PBXProject "treeSort" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				2436938F204B573800E0EE49 /* Debug */,
-				24369390204B573800E0EE49 /* Release */,
+				2455F74E2068A3B400DF40F4 /* Debug */,
+				2455F74F2068A3B400DF40F4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		24369391204B573800E0EE49 /* Build configuration list for PBXNativeTarget "Ants" */ = {
+		2455F7502068A3B400DF40F4 /* Build configuration list for PBXNativeTarget "treeSort" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				24369392204B573800E0EE49 /* Debug */,
-				24369393204B573800E0EE49 /* Release */,
+				2455F7512068A3B400DF40F4 /* Debug */,
+				2455F7522068A3B400DF40F4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = 24369382204B573800E0EE49 /* Project object */;
+	rootObject = 2455F7412068A3B400DF40F4 /* Project object */;
 }
