@@ -15,6 +15,8 @@
 #define ERR_BAD_NODE	(1)	// Node * is NULL
 #define ERR_BAD_INPUT	(2) // Encountered an illegal character in input
 
+#define BUFFER_SIZE	(512)	// Initial buffer size
+
 // MARK: - Properties
 
 struct node {
@@ -85,21 +87,59 @@ void sortTree(Node * root) {
 	}
 }
 
-Node * parseTree(void) {
+char * parseInput(void) {
 	int c;
-	size_t complete = 1; // Has a full tree been parsed?
-	size_t level = 0;
+	size_t length = 0;
+	char * buffer = malloc(BUFFER_SIZE);
+	
+	while ((c = getchar()) != EOF) {
+		if (++length < (BUFFER_SIZE - 1)) {
+			buffer[length - 1] = c;
+		} else {
+			// Reallocate the buffer
+			char * newBuffer = realloc(buffer, length / BUFFER_SIZE); // NOTE: May be an off by one error here
+			buffer = newBuffer;
+			// the following lines may be bad
+			free(newBuffer);
+			newBuffer = NULL;
+		}
+	}
+	
+	buffer[length] = '\0';
+	
+	// Trim the buffer if too long
+	if (BUFFER_SIZE % length != 0) {
+		char * newBuffer = realloc(buffer, length);
+		buffer = newBuffer;
+		// Again, these may be bad
+		free(newBuffer);
+		newBuffer = NULL;
+	}
+	
+	return buffer;
+}
+
+Node * parseTree(char * input) {
+	int c;
+	size_t v_level = 0;
+	size_t h_level = 0;
 	Node * tree = NULL;
+	Node * currentNode = NULL;
 	
 	while ((c = getchar()) != EOF) {
 		switch (c) {
 			case '[':
-				complete = 0;
-				level++;
+				v_level++;
+				h_level++;
+				
+				// Create node
+				// Add to parent at the appropriate index
+				currentNode =
+				
 				break;
 				
 			case ']':
-				if (level > 0) {
+				if (v_level > 0) {
 					
 				} else { // Too many closing braces
 					fellTree(tree);
@@ -107,7 +147,7 @@ Node * parseTree(void) {
 				}
 				
 			default:
-				if (complete) {
+				if (v_level == 0) {
 					return tree;
 				} else {
 					fellTree(tree);
@@ -117,7 +157,7 @@ Node * parseTree(void) {
 		}
 	}
 	
-	if (complete == 1 && level == 0) {
+	if (v_level == 0) {
 		return tree;
 	} else {
 		fellTree(tree);

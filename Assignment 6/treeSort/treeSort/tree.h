@@ -21,7 +21,7 @@ typedef struct node Node;
  */
 void treeSort(Node * root);
 
-Node * parseTree(void);
+Node * parseTree(char * input);
 
 void printTree(Node * tree);
 
