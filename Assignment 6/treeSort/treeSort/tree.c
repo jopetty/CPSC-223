@@ -59,17 +59,17 @@ static Node * createNodeWithSize(size_t size) {
 */
 static void sortChildren(Node * root) {
 	
-	size_t min;
+	size_t max;
 	for (size_t i = 0; i < root->size - 1; i++) {
 		
-		min = i;
+		max = i;
 		for (size_t j = i+1; j < root->size; j++) {
-			if (root->children[j]->size < root->children[min]->size) {
-				min = j;
+			if (root->children[j]->size > root->children[max]->size) {
+				max = j;
 			}
 		}
 		
-		if (min != i) { swap(root->children, i, min); }
+		if (max != i) { swap(root->children, i, max); }
 	}
 }
 
