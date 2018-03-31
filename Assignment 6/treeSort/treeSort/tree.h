@@ -19,9 +19,11 @@ typedef struct node Node;
  
  @param root	Pointer to the root node of a sub-tree.
  */
-void treeSort(Node * root);
+void sortTree(Node * root);
 
-Node * parseTree(char * input);
+Node * parseTree(const char * input, size_t start, size_t end);
+
+char * parseInput(void);
 
 void printTree(Node * tree);
 

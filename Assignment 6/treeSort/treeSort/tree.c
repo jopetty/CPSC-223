@@ -34,16 +34,20 @@ static void swap(Node * array[], size_t i, size_t j) {
 }
 
 static Node * createNodeWithSize(size_t size) {
-	Node * node = malloc(sizeof(*node) + size);
+	
+	Node * node = malloc(sizeof(*node) + size * sizeof(*node->children));
 	if (NULL == node) {
 		fprintf(stderr, "Fatal Error: Unable to create node.\n");
 		exit(ERR_BAD_NODE);
 	}
 	
+//	fprintf(stderr, "Creating node with %zu children.\n", size);
+	
 	node->size = size;
 	node->parent = NULL;
-	
-	memset(node + sizeof(node->size) + sizeof(node->parent), NULL, size);
+	for (size_t i = 0; i < size; i++) {
+		node->children[i] = NULL;
+	}
 	
 	return node;
 }
@@ -88,97 +92,123 @@ void sortTree(Node * root) {
 }
 
 char * parseInput(void) {
+	
 	int c;
+	size_t level = 0;
 	size_t length = 0;
-	char * buffer = malloc(BUFFER_SIZE);
+	size_t size = BUFFER_SIZE;
+	
+	char * newBuffer;
+	char * buff = malloc(size * sizeof(char));
 	
 	while ((c = getchar()) != EOF) {
-		if (++length < (BUFFER_SIZE - 1)) {
-			buffer[length - 1] = c;
+		
+		if (c == '[') {
+			level++;
+		} else if (c == ']') {
+			level--;
 		} else {
-			// Reallocate the buffer
-			char * newBuffer = realloc(buffer, length / BUFFER_SIZE); // NOTE: May be an off by one error here
-			buffer = newBuffer;
-			// the following lines may be bad
-			free(newBuffer);
-			newBuffer = NULL;
+			if (level == 0) {
+				break;
+			} else {
+				free(buff);
+				buff = NULL;
+				fprintf(stderr, "Fatal Error: Illegal input stream.\n");
+				exit(ERR_BAD_INPUT);
+			}
 		}
+		
+		// TODO: Fix buffer reallocation
+		
+//		if (++length >= (size - 1)) {
+//			size =((length / BUFFER_SIZE) + 1) * BUFFER_SIZE;
+//			newBuffer = malloc(size * sizeof(*newBuffer));
+//			memcpy(newBuffer, buff, length);
+//			buff = newBuffer;
+//			free(newBuffer);
+//			newBuffer = NULL;
+//		}
+		
+		buff[length++] = c;
 	}
 	
-	buffer[length] = '\0';
+	buff[length] = '\0';
 	
-	// Trim the buffer if too long
-	if (BUFFER_SIZE % length != 0) {
-		char * newBuffer = realloc(buffer, length);
-		buffer = newBuffer;
-		// Again, these may be bad
-		free(newBuffer);
-		newBuffer = NULL;
-	}
+//	if (length % BUFFER_SIZE != 0) {
+//		newBuffer = malloc(length * sizeof(*newBuffer));
+//		memcpy(newBuffer, buff, length);
+//		buff = newBuffer;
+//		free(newBuffer);
+//		newBuffer = NULL;
+//	}
 	
-	return buffer;
+	return buff;
 }
 
-Node * parseTree(char * input) {
-	int c;
-	size_t v_level = 0;
-	size_t h_level = 0;
-	Node * tree = NULL;
-	Node * currentNode = NULL;
+Node * parseTree(const char * input, size_t start, size_t end) {
 	
-	while ((c = getchar()) != EOF) {
-		switch (c) {
-			case '[':
-				v_level++;
-				h_level++;
-				
-				// Create node
-				// Add to parent at the appropriate index
-				currentNode =
-				
-				break;
-				
-			case ']':
-				if (v_level > 0) {
-					
-				} else { // Too many closing braces
-					fellTree(tree);
-					exit(ERR_BAD_INPUT);
-				}
-				
-			default:
-				if (v_level == 0) {
-					return tree;
-				} else {
-					fellTree(tree);
-					exit(ERR_BAD_INPUT);
-				}
-				break;
+	char c;
+	size_t size = 0;	// How many children does a node have
+	size_t v_level = 0; // Vertical level of the tree
+	
+//	printf("Input:\t");
+	
+	for (size_t i = start ; i < end ; i++) {
+		
+		c = input[i];
+		('[' == c) ? v_level++ : v_level--;
+		if (v_level == 0) { size++; }
+//		printf("%c",c);
+		
+	}
+//	printf("\n");
+	
+	Node * root = createNodeWithSize(size);
+	size_t locations[2];
+	
+	size = 0;
+	for (size_t i = start ; i < end ; i++) {
+		c = input[i];
+		
+		if ('[' == c) {
+			if (v_level++ == 0) {
+				locations[0] = i;
+			}
+		} else {
+			if (--v_level == 0) {
+				locations[1] = i;
+				size++;
+			}
 		}
+		
+		if (v_level == 0) {
+			root->children[size - 1] = parseTree(input, locations[0]+1, locations[1]);
+			root->children[size - 1]->parent = root;
+		}
+		
 	}
 	
-	if (v_level == 0) {
-		return tree;
-	} else {
-		fellTree(tree);
-		exit(ERR_BAD_INPUT);
-	}
+	return root;
+	
 }
 
 void printTree(Node * tree) {
+	
 	printf("[");
+	
 	for (size_t i = 0; i < tree->size; i++) {
 		printTree(tree->children[i]);
 	}
+	
 	printf("]");
 }
 
 void fellTree(Node * tree) {
+	
 	for (size_t i = 0; i < tree->size; i++) {
 		fellTree(tree->children[i]);
 	}
-	
-	free(tree->children);
+
 	free(tree);
 	tree = NULL;
 }
