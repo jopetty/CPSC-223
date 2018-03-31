@@ -113,7 +113,6 @@ char * parseInput(void) {
 			} else {
 				free(buff);
 				buff = NULL;
-				fprintf(stderr, "Fatal Error: Illegal input stream.\n");
 				exit(ERR_BAD_INPUT);
 			}
 		}

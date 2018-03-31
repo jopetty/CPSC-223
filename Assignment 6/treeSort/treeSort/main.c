@@ -14,7 +14,7 @@
 
 void unitTests(void) {
 	// Check for memory leaks
-	char * smallInput = "[[[]][]]";
+	char * smallInput = "[[[]d][]]";
 	printf("Input:\t%s\n", smallInput);
 	size_t i = strlen(smallInput);
 	Node * tree = parseTree(smallInput, 1, i-1);
@@ -41,7 +41,7 @@ int main(int argc, const char * argv[]) {
 
 	free(input);
 	input = NULL;
-//
+
 //	unitTests();
 	
 	return EXIT_SUCCESS;
