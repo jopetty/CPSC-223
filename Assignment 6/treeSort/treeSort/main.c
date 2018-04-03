@@ -12,30 +12,13 @@
 #include <stdlib.h>
 #include <string.h>
 
-void tests() {
-	char * rand100in = "[[[[[[[]]][][[][][[][]]]][[][]][[]][[[][][][]][[][]]][[[[[]][]][[[[][]][]]][][]][][[[][]]][]]][][[[[]][][]][]]][[][][[]]][[[[[[]][]][]][[]][[[]]][]][[[[]][]][[]][][[][[[]]]][]][[[][[[[]][][]][]][]]]]]";
-	char * rand100out = "[[[[[[[[[][]][]]][[[]][]][][]][[[][]]][][]][[[[][]][][]][[[]]][]][[[][][][]][[][]]][[][]][[]]][[[[]][][]][]][]][[[[[[]]][]][[[]][]][[]][][]][[[[[]][]][]][[[]]][[]][]][[[[[[]][][]][]][][]]]][[[]][][]]]";
-	
-	size_t length = strlen(rand100in);
-	Node * tree = parseTree(rand100in, 1, length - 1);
-	sortTree(tree);
-	printTree(tree);
-	fellTree(tree);
-	printf("\n#######################\n");
-	Node * oTree = parseTree(rand100out, 1, length - 1);
-	sortTree(oTree);
-	printTree(oTree);
-	fellTree(oTree);
-
-	
-}
+#define ERR_BAD_ARGS	(3) // Incorrect number of arguments
 
 int main(int argc, const char * argv[]) {
-//	
-//	tests();
 	
 	if (argc != 1) {
 		fprintf(stderr, "Usage: %s", argv[0]);
+		exit(ERR_BAD_ARGS);
 	}
 
 	char * input = parseInput();
