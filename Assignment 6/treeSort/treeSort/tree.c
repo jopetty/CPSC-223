@@ -21,17 +21,12 @@
 
 struct node {
 	size_t size;
+	size_t height;
 	Node * parent;
 	Node * children[];
 };
 
 // MARK: - Static Functions
-
-static void swap(Node * array[], size_t i, size_t j) {
-	Node * tmp = array[i];
-	array[i] = array[j];
-	array[j] = tmp;
-}
 
 static Node * createNodeWithSize(size_t size) {
 	
@@ -41,8 +36,7 @@ static Node * createNodeWithSize(size_t size) {
 		exit(ERR_BAD_NODE);
 	}
 	
-//	fprintf(stderr, "Creating node with %zu children.\n", size);
-	
+	node->height = 1;
 	node->size = size;
 	node->parent = NULL;
 	for (size_t i = 0; i < size; i++) {
@@ -57,20 +51,12 @@ static Node * createNodeWithSize(size_t size) {
  If time permits (it should), this should hopefully
  be replaced by a merge sort implementation.
 */
-static void sortChildren(Node * root) {
+
+static int compareTrees(const void * treeA, const void * treeB) {
+	const Node * const leftTree = *(Node **)treeA;
+	const Node * const rightTree = *(Node **)treeB;
 	
-	size_t max;
-	for (size_t i = 0; i < root->size - 1; i++) {
-		
-		max = i;
-		for (size_t j = i+1; j < root->size; j++) {
-			if (root->children[j]->size > root->children[max]->size) {
-				max = j;
-			}
-		}
-		
-		if (max != i) { swap(root->children, i, max); }
-	}
+	return (int)(rightTree->height - leftTree->height);
 }
 
 // MARK: - Public Functions
@@ -83,7 +69,8 @@ static void sortChildren(Node * root) {
 */
 void sortTree(Node * root) {
 	if (root->size > 1) {
-		sortChildren(root);
+		
+		qsort(root->children, root->size, sizeof(Node *), compareTrees);
 		
 		for (size_t i = 0; i < root->size; i++) {
 			sortTree(root->children[i]);
@@ -97,8 +84,7 @@ char * parseInput(void) {
 	size_t level = 0;
 	size_t length = 0;
 	size_t size = BUFFER_SIZE;
-	
-	char * newBuffer;
+
 	char * buff = malloc(size * sizeof(char));
 	
 	while ((c = getchar()) != EOF) {
@@ -117,29 +103,24 @@ char * parseInput(void) {
 			}
 		}
 		
-		// TODO: Fix buffer reallocation
-		
-//		if (++length >= (size - 1)) {
-//			size =((length / BUFFER_SIZE) + 1) * BUFFER_SIZE;
-//			newBuffer = malloc(size * sizeof(*newBuffer));
-//			memcpy(newBuffer, buff, length);
-//			buff = newBuffer;
-//			free(newBuffer);
-//			newBuffer = NULL;
-//		}
+		if (length >= (size-1)) {
+			size = ((length / BUFFER_SIZE) + 1) * BUFFER_SIZE;
+			buff = realloc(buff, size);
+		}
 		
 		buff[length++] = c;
 	}
 	
 	buff[length] = '\0';
 	
-//	if (length % BUFFER_SIZE != 0) {
-//		newBuffer = malloc(length * sizeof(*newBuffer));
-//		memcpy(newBuffer, buff, length);
-//		buff = newBuffer;
-//		free(newBuffer);
-//		newBuffer = NULL;
-//	}
+	if (length == 0) {
+		free(buff);
+		exit(EXIT_SUCCESS);
+	}
+	
+	if (length % BUFFER_SIZE != 0) {
+		buff = realloc(buff, size - (BUFFER_SIZE % length));
+	}
 	
 	return buff;
 }
@@ -150,17 +131,13 @@ Node * parseTree(const char * input, size_t start, size_t end) {
 	size_t size = 0;	// How many children does a node have
 	size_t v_level = 0; // Vertical level of the tree
 	
-//	printf("Input:\t");
-	
 	for (size_t i = start ; i < end ; i++) {
 		
 		c = input[i];
 		('[' == c) ? v_level++ : v_level--;
 		if (v_level == 0) { size++; }
-//		printf("%c",c);
 		
 	}
-//	printf("\n");
 	
 	Node * root = createNodeWithSize(size);
 	size_t locations[2];
@@ -183,15 +160,17 @@ Node * parseTree(const char * input, size_t start, size_t end) {
 		if (v_level == 0) {
 			root->children[size - 1] = parseTree(input, locations[0]+1, locations[1]);
 			root->children[size - 1]->parent = root;
+			root->height += root->children[size - 1]->height;
 		}
 		
 	}
 	
 	return root;
-	
 }
 
 void printTree(Node * tree) {
+	
+//	printf("\nNode has size of %d\n", tree->height);
 	
 	printf("[");
 	
