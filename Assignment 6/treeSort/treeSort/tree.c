@@ -116,6 +116,7 @@ void sortTree(Node * root) {
 char * parseInput(void) {
 	
 	int c;
+	size_t i = 0;
 	size_t level = 0;
 	size_t length = 0;
 	size_t size = BUFFER_SIZE;
@@ -123,11 +124,20 @@ char * parseInput(void) {
 	char * buffer = malloc(size * sizeof(char));
 	
 	while ((c = getchar()) != EOF) {
-		
+		i++;
 		if (c == '[') {
 			level++;
 		} else if (c == ']') {
-			if (level == 0) { break; } else { level--; }
+			if (level == 0) {
+				if (i > 1) {
+					break;
+				} else {
+					free(buffer);
+					buffer = NULL;
+					exit(ERR_BAD_INPUT);
+				}
+				
+			} else { level--; }
 		} else {
 			if (level == 0) {
 				break;
