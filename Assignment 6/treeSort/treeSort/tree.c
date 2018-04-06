@@ -127,7 +127,7 @@ char * parseInput(void) {
 		if (c == '[') {
 			level++;
 		} else if (c == ']') {
-			level--;
+			if (level == 0) { break; } else { level--; }
 		} else {
 			if (level == 0) {
 				break;
