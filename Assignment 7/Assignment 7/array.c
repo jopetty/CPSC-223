@@ -197,9 +197,9 @@ int arrayCombine(const Array * array, size_t k) {
 		return arrayCombine(array, array->size);
 	}
 	
-	int accumulator = 0;
+	int accumulator = arrayGet(array, 0);
 	
-	for (size_t i = 0; i < k; i++) {
+	for (size_t i = 1; i < k; i++) {
 		accumulator = array->combine(accumulator, arrayGet(array, i));
 	}
 	
