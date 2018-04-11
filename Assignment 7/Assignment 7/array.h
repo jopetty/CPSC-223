@@ -42,4 +42,6 @@ void arraySet(Array *, size_t i, int v);
 // Cost: O(log n).
 int arrayCombine(const Array *, size_t k);
 
+void printArray(const Array *);
+
 #endif /* array_h */
