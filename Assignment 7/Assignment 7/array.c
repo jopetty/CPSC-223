@@ -193,7 +193,7 @@ size_t arraySize(const Array * array) {
 int arrayCombine(const Array * array, size_t k) {
 	if (array == NULL) { exit(3); }
 	
-	if (k == 0 || k == array->size) {
+	if (k == 0 || k > array->size) {
 		return arrayCombine(array, array->size);
 	}
 	
