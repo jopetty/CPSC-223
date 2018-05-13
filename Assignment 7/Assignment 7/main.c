@@ -7,6 +7,7 @@
 //
 
 #include "array.h"
+#include "rope.h"
 
 #include <stdio.h>
 
@@ -18,29 +19,20 @@ int sum1(int x, int y) {
 	return x + y + 1;
 }
 
-void printAggregates(Array * array) {
-	size_t n = arraySize(array);
-	
-	for (size_t i = 0; i <= n; i++) {
-		printf("%d ", arrayCombine(array, i));
-	}
-	printf("\n");
-}
-
 int main(int argc, const char * argv[]) {
 
-	Array * array = arrayCreate(sum1, 20);
+	Array * array = arrayCreate(sum1, 6);
 	
-//	for (size_t i = 0; i < arraySize(array); i++) {
-//		arraySet(array, i, i);
-//	}
+	printf("\n\n\n");
 	
-	arraySet(array, 5, 3);
+//	arraySet(array, 5, 3);
+//	arraySet(array, 0, 8);
+////	arraySet(array, 100, 3);
+//	arraySet(array, 20, 8);
+	printArray(array);
 	
-	printArray(array); printf("\n");
-	
-	printAggregates(array);
-	arrayDestroy(array);
+	printf("Size:\t%zu\n", arraySize(array));
+	printf("Combine: %d\n", arrayCombine(array, 2));
 	
 	return 0;
 }
